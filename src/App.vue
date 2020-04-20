@@ -25,6 +25,8 @@
         methods: {
             getServerData: function(){
 
+                console.log("run");
+
                 let headers = {
                     authkey: this.auth
                 };
@@ -45,12 +47,14 @@
                     .catch((error) => {
                         // handle error
                         console.log (error);
-                        this.$router.push("/login");
                     })
                     .then(function () {
                         // always executed
                     });
 
+            },
+            setDataTimer(){
+                this.getServerData();
             },
             setAuth(authkey){
                 this.auth = authkey;
@@ -59,7 +63,13 @@
             }
         },
         mounted() {
-            this.getServerData();
+            // eslint-disable-next-line no-unused-vars
+            const dataTimer = setInterval(this.getServerData, 4000);
+
+            //logged in?
+            if (this.authorized && this.$route.path === '/'){
+                this.$router.push("/info");
+            }
         },
         watch:{
             // eslint-disable-next-line no-unused-vars

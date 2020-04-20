@@ -5,8 +5,8 @@
         </div>
         <b>{{serverAddress}}</b>
         <div class="menu">
-            <a><router-link to="/info">Server info</router-link></a>
-            <a><router-link to="/games">Game info</router-link></a>
+            <router-link to="/info">Server info</router-link>
+            <router-link to="/games">Game info</router-link>
         </div>
     </div>
 </template>

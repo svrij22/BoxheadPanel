@@ -20,10 +20,12 @@ Vue.use(VueRouter);
 
 import InfoComponent from "@/components/InfoComponent";
 import GameComponent from "@/components/GameComponent";
+import LoginComponent from "@/components/LoginComponent";
 
 const routes = [
   { path: '/info', component: InfoComponent },
   { path: '/games', component: GameComponent },
+  { path: '/login', component: LoginComponent },
 ];
 
 const router = new VueRouter({

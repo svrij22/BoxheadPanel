@@ -30,32 +30,11 @@
 </template>
 
 <script>
-    import axios from "axios";
 
     export default {
         name: "InfoComponent",
-        props: ['serverAddress'],
-        data: function() {
-            return {
-                serverData: "test"
-            }
-        },
+        props: ['serverData'],
         methods: {
-            getServerData: function(){
-                axios.post(`http://${this.serverAddress}:8090/dataFile.json`)
-                    .then((response) => {
-                        // handle success
-                        this.serverData = response;
-                    })
-                    .catch( (error) => {
-                        // handle error
-                        this.serverData = error;
-                    })
-                    .then(function () {
-                        // always executed
-                    });
-                setTimeout(this.getServerData, 4000);
-            },
             secondsFormat(seconds){
                 let dateStr = (new Date).clearTime()
                     .addSeconds(seconds)
@@ -75,9 +54,6 @@
             serverTime(){
               return this.secondsFormat(this.serverData.data.ticks * 2);
             },
-        },
-        mounted() {
-            this.getServerData()
         }
     }
 </script>

@@ -59,7 +59,7 @@
                 <div class="infobox">
                     <font-awesome-icon icon="network-wired" />
                     Network Usage
-                    <div class="ipbox">
+                    <div class="ipbox" v-if="serverData.data.netusage !== 'not supported'">
                         <div class="memInfo">Input MB<br>{{serverData.data.netusage.total.inputMb}}</div>
                         <div class="memInfo">Output MB<br>{{serverData.data.netusage.total.outputMb}}</div>
                     </div>
@@ -84,32 +84,11 @@
 </template>
 
 <script>
-    import axios from "axios";
 
     export default {
         name: "InfoComponent",
-        props: ['serverAddress'],
-        data: function() {
-            return {
-                serverData: "test"
-            }
-        },
+        props: ['serverData'],
         methods: {
-            getServerData: function(){
-                axios.post(`http://${this.serverAddress}:8090/dataFile.json`)
-                    .then((response) => {
-                        // handle success
-                        this.serverData = response;
-                    })
-                    .catch( (error) => {
-                        // handle error
-                        this.serverData = error;
-                    })
-                    .then(function () {
-                        // always executed
-                    });
-                setTimeout(this.getServerData, 4000);
-            },
             playerData(socket){
                 return socket.remote.address + " on port " + socket.remote.port + " with username " + socket.name
             },
@@ -142,9 +121,6 @@
                 }
                 return {};
             }
-        },
-        mounted() {
-            this.getServerData()
         }
     }
 </script>

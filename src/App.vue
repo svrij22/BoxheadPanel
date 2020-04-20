@@ -1,12 +1,13 @@
 <template>
     <div id="app">
-        <side-bar-comp :server-address="serverAddress"/>
-        <router-view :server-address="serverAddress" id="view"></router-view>
+        <side-bar-comp :server-data="serverData"/>
+        <router-view :server-data="serverData" @emitauth="setAuth" id="view"></router-view>
     </div>
 </template>
 
 <script>
     import SideBarComp from "@/components/SideBarComp";
+    import axios from "axios";
 
     export default {
         name: 'App',
@@ -15,7 +16,58 @@
         },
         data: function () {
             return {
-                serverAddress: "136.144.191.118"
+                serverAddress: "localhost",
+                serverData: "",
+                auth: "",
+                authorized: false
+            }
+        },
+        methods: {
+            getServerData: function(){
+
+                let headers = {
+                    authkey: this.auth
+                };
+
+                axios.get(`http://${this.serverAddress}:8090/dataFile.json`, {
+                    headers: headers
+                })
+                    .then((response) => {
+                        // handle success
+                        this.serverData = response;
+
+                        //If got response and trying to log in
+                        if (response.data && this.$route.path === '/login'){
+                            this.authorized = true;
+                            this.$router.push("/info");
+                        }
+                    })
+                    .catch((error) => {
+                        // handle error
+                        console.log (error);
+                        this.$router.push("/login");
+                    })
+                    .then(function () {
+                        // always executed
+                    });
+
+            },
+            setAuth(authkey){
+                this.auth = authkey;
+                this.getServerData();
+                console.log (authkey)
+            }
+        },
+        mounted() {
+            this.getServerData();
+        },
+        watch:{
+            // eslint-disable-next-line no-unused-vars
+            $route (to, from){
+                if (to !== '/login' && !this.authorized){
+                    console.log("log in first");
+                    this.$router.push("/login");
+                }
             }
         }
     }
@@ -42,6 +94,7 @@
         display: flex;
         flex-direction: row;
 
+        width: 100%;
     }
 
     html {

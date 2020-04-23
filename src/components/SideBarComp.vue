@@ -1,20 +1,35 @@
 <template>
     <div class="sidenav">
-        <div class="logo">
-            <img src="../assets/logo.png"/>
+        <div>
+            <div class="logo">
+                <img src="../assets/logo.png"/>
+            </div>
+            <b>{{serverAddress}}</b>
+            <div class="menu">
+                <router-link to="/info">Server info</router-link>
+                <router-link to="/games">Game info</router-link>
+                <router-link to="/user">User info</router-link>
+            </div>
         </div>
-        <b>{{serverAddress}}</b>
-        <div class="menu">
-            <router-link to="/info">Server info</router-link>
-            <router-link to="/games">Game info</router-link>
+        <div class="footer" v-if="isAuth">
+            <div class="username">
+                <font-awesome-icon icon="user" /> {{username}}
+            </div>
+            <button @click="emitClick"> Logout </button>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        props: ['serverAddress'],
-        name: "SideBarComp"
+        props: ['serverAddress', "username","isAuth"],
+        name: "SideBarComp",
+        methods: {
+            emitClick(){
+                console.log ("test");
+                this.$emit('emitlogout')
+            }
+        }
     }
 </script>
 
@@ -29,14 +44,15 @@
     }
 
     .sidenav {
-        height: 100%;
         min-width: 240px;
-
         z-index: 1;
-
         background-color: #111;
         overflow-x: hidden;
         padding-top: 20px;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 16px;
+        justify-content: space-between;
     }
 
     .sidenav a {
@@ -54,6 +70,31 @@
 
     .sidenav b{
         color: white;
+    }
+
+    .footer{
+
+    }
+
+    .username{
+        color: white;
+        text-align: left;
+        font-size: 20px;
+        padding: 6px 8px 6px 16px;
+    }
+
+    button {
+        background-color: #af211c;
+        color: white;
+        padding: 9px 20px;
+        margin: 2px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    button:hover {
+        opacity: 0.8;
     }
 
     .main {

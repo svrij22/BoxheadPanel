@@ -1,6 +1,11 @@
 <template>
     <div id="app">
-        <side-bar-comp :server-data="serverData"/>
+        <side-bar-comp
+                :server-address="serverAddress"
+                :isAuth="authorized"
+                @emitlogout="doLogout"
+                :username="username"
+        />
         <router-view :server-data="serverData" @emitauth="setAuth" id="view"></router-view>
     </div>
 </template>
@@ -19,7 +24,8 @@
                 serverAddress: "136.144.191.118",
                 serverData: "",
                 auth: "",
-                authorized: false
+                authorized: false,
+                username: "",
             }
         },
         methods: {
@@ -31,7 +37,13 @@
                     authkey: this.auth
                 };
 
-                axios.get(`http://${this.serverAddress}:8090/dataFile.json`, {
+                let getFile = "";
+                if (this.$route.path === "/login") getFile = "dataFile.json"
+                if (this.$route.path === "/info") getFile = "dataFile.json"
+                if (this.$route.path === "/games") getFile = "dataFile.json"
+                if (this.$route.path === "/user") getFile = "userFile.json"
+
+                axios.get(`http://${this.serverAddress}:8090/${getFile}`, {
                     headers: headers
                 })
                     .then((response) => {
@@ -47,7 +59,12 @@
                     })
                     .catch((error) => {
                         // handle error
-                        console.log (error);
+                        console.log (error)
+
+                        //If error and not logged in
+                        if (!this.authorized && this.$route.path !== '/login'){
+                            this.$router.push("/login");
+                        }
                     })
                     .then(function () {
                         // always executed
@@ -57,10 +74,18 @@
             setDataTimer(){
                 this.getServerData();
             },
-            setAuth(authkey){
+            setAuth(authkey, username){
                 this.auth = authkey;
+                this.username = username;
                 this.getServerData();
                 console.log (authkey)
+            },
+            doLogout(){
+                console.log ("logging out")
+                this.auth = "";
+                this.username = "";
+                this.authorized = false;
+                this.$router.push("/login");
             }
         },
         mounted() {

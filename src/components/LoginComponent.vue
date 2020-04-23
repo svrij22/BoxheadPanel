@@ -3,7 +3,7 @@
         <div class="form">
             <b>Login please</b>
             <br>
-            <br>
+            <hr>
             <label><b>Username</b></label>
             <input v-model="username" type="text" placeholder="Enter Username" required>
             <label><b>Password</b></label>
@@ -26,7 +26,7 @@
         methods: {
             auth(){
                 this.authkey = "auth" + new Buffer(this.username + ":" + this.passw).toString("base64");
-                this.$emit('emitauth', this.authkey)
+                this.$emit('emitauth', this.authkey, this.username)
             }
         }
     }

@@ -3,7 +3,7 @@
         <div class="logo">
             <img src="../assets/logo.png"/>
         </div>
-        <b>{{serverAddress}}</b>
+        <b>{{serverData.address}}</b>
         <div class="menu">
             <router-link to="/info">Server info</router-link>
             <router-link to="/games">Game info</router-link>
@@ -13,7 +13,7 @@
 
 <script>
     export default {
-        props: ['serverAddress'],
+        props: ['serverData'],
         name: "SideBarComp"
     }
 </script>

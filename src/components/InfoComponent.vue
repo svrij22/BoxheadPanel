@@ -1,6 +1,6 @@
 <template>
     <div class="infocomp" v-if="serverData.data">
-        <div class="totaltime">{{serverAddress}}</div>
+        <div class="totaltime">{{serverData.address}}</div>
         <div class="row">
             Server has been online for: {{serverTime}} <br>
             Running version: {{serverData.data.version}}

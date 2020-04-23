@@ -16,7 +16,7 @@
         },
         data: function () {
             return {
-                serverAddress: "localhost",
+                serverAddress: "136.144.191.118",
                 serverData: "",
                 auth: "",
                 authorized: false
@@ -37,6 +37,7 @@
                     .then((response) => {
                         // handle success
                         this.serverData = response;
+                        this.serverData.address = this.serverAddress;
 
                         //If got response and trying to log in
                         if (response.data && this.$route.path === '/login'){
@@ -64,7 +65,7 @@
         },
         mounted() {
             // eslint-disable-next-line no-unused-vars
-            const dataTimer = setInterval(this.getServerData, 4000);
+            const dataTimer = setInterval(this.getServerData, 2000);
 
             //logged in?
             if (this.authorized && this.$route.path === '/'){

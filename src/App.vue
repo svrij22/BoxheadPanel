@@ -38,10 +38,10 @@
                 };
 
                 let getFile = "";
-                if (this.$route.path === "/login") getFile = "dataFile.json"
-                if (this.$route.path === "/info") getFile = "dataFile.json"
-                if (this.$route.path === "/games") getFile = "dataFile.json"
-                if (this.$route.path === "/user") getFile = "userFile.json"
+                if (this.$route.path === "/login") getFile = "dataFile.json";
+                if (this.$route.path === "/info") getFile = "dataFile.json";
+                if (this.$route.path === "/games") getFile = "dataFile.json";
+                if (this.$route.path === "/user") getFile = "playerData.json";
 
                 axios.get(`http://${this.serverAddress}:8090/${getFile}`, {
                     headers: headers
@@ -148,6 +148,14 @@
 
     #view {
         margin: 8px;
+    }
+
+    .infocomp{
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        padding: 32px;
     }
 
 </style>

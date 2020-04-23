@@ -21,11 +21,13 @@ Vue.use(VueRouter);
 import InfoComponent from "@/components/InfoComponent";
 import GameComponent from "@/components/GameComponent";
 import LoginComponent from "@/components/LoginComponent";
+import playerInfoComp from "@/components/playerInfoComp";
 
 const routes = [
   { path: '/info', component: InfoComponent },
   { path: '/games', component: GameComponent },
   { path: '/login', component: LoginComponent },
+  { path: '/user', component: playerInfoComp },
 ];
 
 const router = new VueRouter({

@@ -66,14 +66,6 @@
 
 <style scoped>
 
-    .infocomp{
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        align-items: center;
-        padding: 32px;
-    }
-
     .infobox{
         border: 3px solid #dddddd;
         border-radius: 8px;

@@ -24,8 +24,8 @@
         name: "DebugComponent",
         data: function () {
             return {
-                paths: ["login", "serverlog", "info", "player", "json", "parsed", "sockets", "playerUpdate", "players"],
-                pathsNames: ["Login Auth Key", "Java Server Log", "Node Server Info", "Node Player Info", "JSON", "JSON PARSED", "Socket Info Excl", "Update Player Info", "All Player Class Instances"],
+                paths: ["login", "serverlog", "info", "player", "json", "parsed", "sockets", "playerUpdate", "players", "registered"],
+                pathsNames: ["Login Auth Key", "Java Server Log", "Node Server Info", "Node Player Info", "JSON", "JSON PARSED", "Socket Info Excl", "Update Player Info", "All Player Class Instances", "Registered Players"],
                 pathsx: ["player", "socket"],
                 addition: ""
             }

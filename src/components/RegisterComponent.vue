@@ -25,7 +25,7 @@
                 passw: "",
                 authkey: "",
                 regkey: "",
-                regMsg: "Login Please"
+                regMsg: "Register Please"
             }
         },
         watch:{

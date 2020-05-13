@@ -65,9 +65,7 @@
                         this.serverData = error.response.status;
 
                         //If error and not logged in
-                        if (!this.authorized && this.$route.path !== '/login'){
-                            this.$router.push("/login");
-                        }
+                        this.checkPath(this.$route.path);
                     })
                 .finally(() =>{
                     //set faux data
@@ -145,6 +143,14 @@
                 dataMap2.push(remoteData);
                 dataMap2.push(remoteData);
                 console.log(remoteData);
+            },
+            checkPath(path){
+                //Checks if logged in or trying to log in
+                let eitherPath = (path === '/login' || path === "/register");
+                if (!eitherPath && !this.authorized) {
+                    console.log("log in first");
+                    this.$router.push("/login");
+                }
             }
         },
         mounted() {
@@ -161,12 +167,7 @@
             $route (to, from){
 
                 //Still retry server data get
-                if (to !== '/login' || to !== "/register") {
-                    if (!this.authorized) {
-                        console.log("log in first");
-                        this.$router.push("/login");
-                    }
-                }
+                this.checkPath(to.path);
             }
         }
     }

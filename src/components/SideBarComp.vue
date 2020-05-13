@@ -6,10 +6,16 @@
             </div>
             <b>{{serverAddress}}</b>
             <div class="menu">
-                <router-link to="/info">Server info</router-link>
-                <router-link to="/games">Game info</router-link>
-                <router-link to="/user">User info</router-link>
-                <router-link to="/debug">Debugger</router-link>
+                <div v-if="isAuth">
+                    <router-link to="/info">Server info</router-link>
+                    <router-link to="/games">Game info</router-link>
+                    <router-link to="/user">User info</router-link>
+                    <router-link to="/debug">Debugger</router-link>
+                </div>
+                <div v-else>
+                    <router-link to="/login">Login</router-link>
+                    <router-link to="/register">Register</router-link>
+                </div>
             </div>
         </div>
         <div class="footer" v-if="isAuth">

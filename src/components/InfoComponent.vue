@@ -79,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <p>{{JSON.stringify(serverData, null, "\t")}}</p>
+        <p class="output">{{JSON.stringify(serverData, null, "\t")}}</p>
     </div>
 </template>
 

@@ -1,5 +1,4 @@
 <template>
-    <div>
         <div class="infocomp" v-if="serverData.data">
             <div class="totaltime">{{serverData.address}}</div>
             <div class="row">
@@ -7,35 +6,29 @@
                 Running version: {{serverData.data.version}}
             </div>
             <div class="infocontent">
-                <div class="col">
-                    <div v-for="(game, index) in serverData.data.gameMaps" v-bind:key="index">
-                        <div class="gamecontainer infobox" v-if="game.config">
-                            <div v-if="game.config" class="wavecon alleft">Wave {{game.config.wave}}</div>
-                            <div v-if="game.config" class="wavecon alright">ID {{game.config.gameid}}</div>
-                            <b>Game {{index + 1}}</b>
-                            <br>
-                            Being played by: <div v-for="plr in game.identities" v-bind:key="plr">{{getName(game, plr)}}</div>
-                            <hr>
-                            <div class="smallInfo">
-                                Current state: {{game.config.wavestate}}
-                            </div>
-                            <div class="smallInfo">
-                                Zombies: {{Object.keys(game.zombies).length - 1}} / {{game.config.zombiestogo}}
-                            </div>
+                    <div class="infobox" v-for="(game, index) in activeMaps" v-bind:key="index">
+                        <div class="wavecon alleft">Wave {{game.config.wave}}</div>
+                        <div class="wavecon alright">ID {{game.config.gameid}}</div>
+                        <b>Game {{index + 1}}</b>
+                        <br>
+                        Being played by: <div v-for="plr in game.identities" v-bind:key="plr">{{getName(game, plr)}}</div>
+                        <hr>
+                        <div class="smallInfo">
+                            Current state: {{game.config.wavestate}}
+                        </div>
+                        <div class="smallInfo">
+                            Zombies: {{Object.keys(game.zombies).length - 1}} / {{game.config.zombiestogo}}
                         </div>
                     </div>
-                </div>
             </div>
-            <p>{{JSON.stringify(serverData, null, "\t")}}</p>
+            <p class="output">{{JSON.stringify(serverData, null, "\t")}}</p>
         </div>
 
-        <div class="container">
-            <div class="loader"/>
-        </div>
-    </div>
 </template>
 
 <script>
+
+    import _ from 'lodash';
 
     export default {
         name: "InfoComponent",
@@ -60,22 +53,36 @@
             serverTime(){
               return this.secondsFormat(this.serverData.data.ticks * 2);
             },
+            activeMaps(){
+                return _.filter(this.serverData.data.gameMaps, (o) =>{
+                    return (o.config);
+                })
+            }
+        },
+        mounted() {
+            //Set path
+            this.$emit('emitpath', "info")
         }
     }
 </script>
 
 <style scoped>
 
+    .infocontent{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
     .infobox{
         border: 3px solid #dddddd;
         border-radius: 8px;
         padding: 2px;
         margin: 7px;
-    }
-
-    .gamecontainer{
-        width: 400px;
         position: relative;
+        min-width: 300px;
+        flex-grow: 4;
     }
 
     .wavecon{
@@ -102,14 +109,6 @@
         font-size: 23px;
     }
 
-    .infocontent{
-        display: flex;
-        flex-direction: row;
-    }
-
-    .col{
-        max-width: 500px;
-    }
 
     .row{
         width: 100%;
@@ -121,35 +120,5 @@
         padding: 8px;
         margin: 6px;
         flex-grow: 1;
-    }
-
-
-    .container{
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .loader {
-        border: 16px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 16px solid #3498db;
-        width: 50px;
-        height: 50px;
-        -webkit-animation: spin 2s linear infinite; /* Safari */
-        animation: spin 2s linear infinite;
-    }
-
-    /* Safari */
-    @-webkit-keyframes spin {
-        0% { -webkit-transform: rotate(0deg); }
-        100% { -webkit-transform: rotate(360deg); }
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
     }
 </style>

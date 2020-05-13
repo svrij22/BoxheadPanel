@@ -6,7 +6,7 @@
                 @emitlogout="doLogout"
                 :username="username"
         />
-        <router-view :server-data="serverData" @emitauth="setAuth" id="view"></router-view>
+        <router-view :server-data="serverData" @emitauth="setAuth" @emitpath="setPath" id="view"></router-view>
     </div>
 </template>
 
@@ -21,29 +21,24 @@
         },
         data: function () {
             return {
-                serverAddress: "136.144.191.118",
+                serverAddress: "localhost",
                 serverData: "",
                 auth: "",
                 authorized: false,
                 username: "",
+                getPath: ""
             }
         },
         methods: {
             getServerData: function(){
-
-                console.log("run");
+                console.log("Request");
 
                 let headers = {
-                    authkey: this.auth
+                    authkey: this.auth,
+                    name: this.username
                 };
 
-                let getFile = "";
-                if (this.$route.path === "/login") getFile = "dataFile.json";
-                if (this.$route.path === "/info") getFile = "dataFile.json";
-                if (this.$route.path === "/games") getFile = "dataFile.json";
-                if (this.$route.path === "/user") getFile = "playerData.json";
-
-                axios.get(`http://${this.serverAddress}:8090/${getFile}`, {
+                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
                     headers: headers
                 })
                     .then((response) => {
@@ -52,23 +47,32 @@
                         this.serverData.address = this.serverAddress;
 
                         //If got response and trying to log in
-                        if (response.data && this.$route.path === '/login'){
-                            this.authorized = true;
-                            this.$router.push("/info");
+                        let path = this.$route.path;
+
+                        //If trying to login or register move to info
+                        if (path === '/login' || path === "/register") {
+                            if (response.data) {
+                                this.authorized = true;
+                                this.$router.push("/info");
+                            }
                         }
                     })
                     .catch((error) => {
                         // handle error
-                        console.log (error)
+                        console.log (error);
+
+                        //Register error as response
+                        this.serverData = error.response.status;
 
                         //If error and not logged in
                         if (!this.authorized && this.$route.path !== '/login'){
                             this.$router.push("/login");
                         }
                     })
-                    .then(function () {
-                        // always executed
-                    });
+                .finally(() =>{
+                    //set faux data
+                    this.fauxData();
+                })
 
             },
             setDataTimer(){
@@ -80,19 +84,74 @@
                 this.getServerData();
                 console.log (authkey)
             },
+            setPath(path){
+                this.getPath = path;
+                this.getServerData();
+            },
             doLogout(){
-                console.log ("logging out")
+                console.log ("logging out");
                 this.auth = "";
                 this.username = "";
                 this.authorized = false;
                 this.$router.push("/login");
+            },
+            fauxData(){
+
+                //Only continue is found sockets
+                if (!this.serverData.data.sockets) return;
+
+                var remoteData = {
+                    "remote": {
+                        "address": "81.206.12.59",
+                        "family": "IPv4",
+                        "port": 51040,
+                        "size": 9
+                    },
+                    "heartbeat": 5,
+                    "group": 0,
+                    "name": "test",
+                    "ticks": 9,
+                    "gameoverTicker": 2
+                };
+
+                var mapData = {
+                    "identities": [
+                        0
+                    ],
+                    "config": {
+                        "dataset": "true",
+                        "type": "config",
+                        "id_names0": "noob",
+                        "zombiestogo": (Math.floor(Math.random() * 15)),
+                        "wave": 0,
+                        "wavestate": "WAVEEND",
+                        "maxzombies": (Math.floor(Math.random() * 15)),
+                        "waveticker": 0,
+                        "gameid": (Math.floor(Math.random() * 99999))
+                    },
+                    "zombies": {
+                        "zombie48089": "913.42^921.63^0^48089^zombie^",
+                        "type": "zombies"
+                    }
+                };
+
+                let dataMap = this.serverData.data.gameMaps;
+                dataMap.push(mapData);
+                dataMap.push(mapData);
+                dataMap.push(mapData);
+
+                let dataMap2 = this.serverData.data.sockets;
+                dataMap2.push(remoteData);
+                dataMap2.push(remoteData);
+                dataMap2.push(remoteData);
+                console.log(remoteData);
             }
         },
         mounted() {
             // eslint-disable-next-line no-unused-vars
-            const dataTimer = setInterval(this.getServerData, 2000);
+            //const dataTimer = setInterval(this.getServerData, 2000);
 
-            //logged in?
+            //on mounted if logged in goto info
             if (this.authorized && this.$route.path === '/'){
                 this.$router.push("/info");
             }
@@ -100,9 +159,13 @@
         watch:{
             // eslint-disable-next-line no-unused-vars
             $route (to, from){
-                if (to !== '/login' && !this.authorized){
-                    console.log("log in first");
-                    this.$router.push("/login");
+
+                //Still retry server data get
+                if (to !== '/login' || to !== "/register") {
+                    if (!this.authorized) {
+                        console.log("log in first");
+                        this.$router.push("/login");
+                    }
                 }
             }
         }
@@ -151,11 +214,45 @@
     }
 
     .infocomp{
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-content: center;
         align-items: center;
         padding: 32px;
+    }
+
+
+    .output{
+        overflow: scroll;
+        white-space: pre-wrap;
+        text-align: left!important;
+        height: 100%;
+        margin: 8px;
+        background: #f9e6e6;
+        width: 100%;
+    }
+
+    button {
+        background-color: #af211c;
+        color: white;
+        padding: 15px;
+        margin: 8px;
+        border: none;
+        cursor: pointer;
+        flex-grow: 4;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+
+    input{
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
     }
 
 </style>

@@ -1,32 +1,44 @@
 <template>
     <div class="container">
         <div class="form">
-            <b>Login please</b>
+            <b>{{regMsg}}</b>
             <br>
             <hr>
             <label><b>Username</b></label>
             <input v-model="username" type="text" placeholder="Enter Username" required>
             <label><b>Password</b></label>
             <input v-model="passw" type="password" placeholder="Enter Password" required>
-            <button @click="auth" type="submit">Login</button>
+            <label><b>Register key</b></label>
+            <input v-model="regkey" type="text" placeholder="Enter Register key" required>
+            <button @click="auth" type="submit">Register</button>
         </div>
     </div>
 </template>
 
 <script>
     export default {
+        props: ['serverData'],
         name: "LoginComponent",
         data: function(){
             return{
                 username: "",
                 passw: "",
-                authkey: ""
+                authkey: "",
+                regkey: "",
+                regMsg: "Login Please"
+            }
+        },
+        watch:{
+            serverData: function(val){
+                console.log(val);
+                if (this.serverData === 409) this.regMsg = "Can't find player";
+                if (this.serverData === 401) this.regMsg = "Access Denied";
             }
         },
         methods: {
             auth(){
                 this.authkey = "auth" + new Buffer(this.username + ":" + this.passw).toString("base64");
-                this.$emit('emitpath', "login");
+                this.$emit('emitpath', "register");
                 this.$emit('emitauth', this.authkey, this.username);
             }
         }

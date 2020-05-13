@@ -9,6 +9,7 @@
                 <router-link to="/info">Server info</router-link>
                 <router-link to="/games">Game info</router-link>
                 <router-link to="/user">User info</router-link>
+                <router-link to="/debug">Debugger</router-link>
             </div>
         </div>
         <div class="footer" v-if="isAuth">
@@ -44,11 +45,8 @@
     }
 
     .sidenav {
-        height: 100%;
         min-width: 240px;
-
         z-index: 1;
-
         background-color: #111;
         overflow-x: hidden;
         padding-top: 20px;
@@ -79,25 +77,16 @@
 
     }
 
+    button{
+        width: 100%;
+        margin: 0;
+    }
+
     .username{
         color: white;
         text-align: left;
         font-size: 20px;
         padding: 6px 8px 6px 16px;
-    }
-
-    button {
-        background-color: #af211c;
-        color: white;
-        padding: 9px 20px;
-        margin: 2px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-    }
-
-    button:hover {
-        opacity: 0.8;
     }
 
     .main {

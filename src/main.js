@@ -22,12 +22,16 @@ import InfoComponent from "@/components/InfoComponent";
 import GameComponent from "@/components/GameComponent";
 import LoginComponent from "@/components/LoginComponent";
 import playerInfoComp from "@/components/playerInfoComp";
+import DebugComponent from "@/components/DebugComponent";
+import RegisterComponent from "@/components/RegisterComponent";
 
 const routes = [
   { path: '/info', component: InfoComponent },
   { path: '/games', component: GameComponent },
   { path: '/login', component: LoginComponent },
   { path: '/user', component: playerInfoComp },
+  { path: '/debug', component: DebugComponent },
+  { path: '/register', component: RegisterComponent },
 ];
 
 const router = new VueRouter({

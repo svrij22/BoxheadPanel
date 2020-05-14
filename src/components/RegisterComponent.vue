@@ -35,6 +35,7 @@
                 if (this.serverData === 409) this.regMsg = "Username taken";
                 if (this.serverData === 401) this.regMsg = "Register Key already taken";
                 if (this.serverData === 428) this.regMsg = "Fill in username and a (better) password";
+                this.serverData = "";
             }
         },
         methods: {

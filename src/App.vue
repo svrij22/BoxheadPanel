@@ -27,7 +27,7 @@
                 serverAddress: "localhost",
                 serverData: "",
                 auth: "",
-                authorized: false,
+                authorized: true,
                 username: "",
                 regkey: "",
                 getPath: "",
@@ -45,7 +45,8 @@
                     command: this.command
                 };
 
-                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
+                //axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
+                axios.get(`http://${this.serverAddress}:80/boxhead/restservices/game/${this.getPath}`, {
                     headers: headers
                 })
                     .then((response) => {
@@ -84,6 +85,7 @@
                 this.getServerData();
             },
             setAuth(passw, username, regkey){
+                if (passw === undefined) return;
                 const privateKey = "BOXHEAD";
                 const hashDigest = sha256("authkey" + passw);
                 this.auth = Base64.stringify(hmacSHA512(hashDigest, privateKey));

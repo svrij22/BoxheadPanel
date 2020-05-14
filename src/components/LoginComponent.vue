@@ -25,7 +25,7 @@
         methods: {
             auth(){
                 this.$emit('emitpath', "login", "");
-                this.$emit('emitauth', this.authkey, this.username, "");
+                this.$emit('emitauth', this.passw, this.username, "");
             }
         }
     }

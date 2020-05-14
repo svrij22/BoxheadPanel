@@ -11,6 +11,7 @@
                     <router-link to="/games">Game info</router-link>
                     <router-link to="/user">User info</router-link>
                     <router-link to="/debug">Debugger</router-link>
+                    <router-link to="/ssh">SSH CLI</router-link>
                 </div>
                 <div v-else>
                     <router-link to="/login">Login</router-link>

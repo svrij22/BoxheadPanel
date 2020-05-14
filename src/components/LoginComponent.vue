@@ -19,15 +19,13 @@
         data: function(){
             return{
                 username: "",
-                passw: "",
-                authkey: ""
+                passw: ""
             }
         },
         methods: {
             auth(){
-                this.authkey = "auth" + new Buffer(this.username + ":" + this.passw).toString("base64");
-                this.$emit('emitpath', "login");
-                this.$emit('emitauth', this.authkey, this.username);
+                this.$emit('emitpath', "login", "");
+                this.$emit('emitauth', this.authkey, this.username, "");
             }
         }
     }

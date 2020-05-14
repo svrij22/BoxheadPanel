@@ -15,6 +15,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "crypto-js": "^4.0.0",
     "datejs": "^1.0.0-rc3",
     "vue": "^2.6.11",
     "vue-fontawesome": "0.0.2",

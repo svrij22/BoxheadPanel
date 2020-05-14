@@ -56,7 +56,7 @@
         },
         mounted(){
             //Set path
-            this.$emit('emitpath', "player");
+            this.$emit('emitpath', "player", "");
         }
     }
 </script>

@@ -61,7 +61,7 @@
         },
         mounted() {
             //Set path
-            this.$emit('emitpath', "info")
+            this.$emit('emitpath', "info", "")
         }
     }
 </script>

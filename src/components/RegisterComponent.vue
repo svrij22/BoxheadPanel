@@ -16,6 +16,7 @@
 </template>
 
 <script>
+
     export default {
         props: ['serverData'],
         name: "LoginComponent",
@@ -23,7 +24,6 @@
             return{
                 username: "",
                 passw: "",
-                authkey: "",
                 regkey: "",
                 regMsg: "Register Please"
             }
@@ -31,15 +31,16 @@
         watch:{
             serverData: function(val){
                 console.log(val);
-                if (this.serverData === 409) this.regMsg = "Can't find player";
-                if (this.serverData === 401) this.regMsg = "Access Denied";
+                if (this.serverData === 404) this.regMsg = "Can't find player";
+                if (this.serverData === 409) this.regMsg = "Username taken";
+                if (this.serverData === 401) this.regMsg = "Register Key already taken";
+                if (this.serverData === 428) this.regMsg = "Fill in username and a (better) password";
             }
         },
         methods: {
             auth(){
-                this.authkey = "auth" + new Buffer(this.username + ":" + this.passw).toString("base64");
-                this.$emit('emitpath', "register");
-                this.$emit('emitauth', this.authkey, this.username);
+                this.$emit('emitpath', "register", "");
+                this.$emit('emitauth', this.passw, this.username, this.regkey);
             }
         }
     }

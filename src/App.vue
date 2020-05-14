@@ -13,6 +13,9 @@
 <script>
     import SideBarComp from "@/components/SideBarComp";
     import axios from "axios";
+    import sha256 from 'crypto-js/sha256';
+    import hmacSHA512 from 'crypto-js/hmac-sha512';
+    import Base64 from 'crypto-js/enc-base64';
 
     export default {
         name: 'App',
@@ -26,7 +29,9 @@
                 auth: "",
                 authorized: false,
                 username: "",
-                getPath: ""
+                regkey: "",
+                getPath: "",
+                command: ""
             }
         },
         methods: {
@@ -35,7 +40,9 @@
 
                 let headers = {
                     authkey: this.auth,
-                    name: this.username
+                    name: this.username,
+                    regkey: this.regkey,
+                    command: this.command
                 };
 
                 axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
@@ -76,14 +83,18 @@
             setDataTimer(){
                 this.getServerData();
             },
-            setAuth(authkey, username){
-                this.auth = authkey;
+            setAuth(passw, username, regkey){
+                const privateKey = "BOXHEAD";
+                const hashDigest = sha256("authkey" + passw);
+                this.auth = Base64.stringify(hmacSHA512(hashDigest, privateKey));
                 this.username = username;
+                this.regkey = regkey;
                 this.getServerData();
-                console.log (authkey)
+                console.log (this.auth)
             },
-            setPath(path){
+            setPath(path, cmd){
                 this.getPath = path;
+                this.command = cmd;
                 this.getServerData();
             },
             doLogout(){

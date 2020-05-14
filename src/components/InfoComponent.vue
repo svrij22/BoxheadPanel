@@ -121,6 +121,10 @@
                 }
                 return {};
             }
+        },
+        mounted() {
+            //Set path
+            this.$emit('emitpath', "info", "")
         }
     }
 </script>

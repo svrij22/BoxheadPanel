@@ -6,6 +6,7 @@
             </div>
             <b>{{serverAddress}}</b>
             <div class="menu">
+                <router-link to="/play">Play</router-link>
                 <div v-if="isAuth">
                     <router-link to="/info">Server info</router-link>
                     <router-link to="/games">Game info</router-link>

@@ -1,16 +1,18 @@
 <template>
     <div class="infocomp">
-        <h3>Search for player on name or id</h3>
-        <input v-model="searchQuery">
-        <div class="playerInfo" v-for="(user, index) in items" v-bind:key="index">
-            <div class="wavecon">
-                <font-awesome-icon icon="user" /> {{user.username}}<br>
-            </div>
-            <br>
-            <div class="dispData">
-                <div class="smallInfo" v-for="(i, name, value) in user" v-bind:key="value">
-                    <b>{{name}}</b><br>{{i}}
+        <div class="playercontainer">
+            <h3>Search for player on name or id</h3>
+            <input v-model="searchQuery">
+            <div class="playerInfo" v-for="(user, index) in items" v-bind:key="index">
+                <div class="wavecon">
+                    <font-awesome-icon icon="user" /> {{user.username}}<br>
+                </div>
+                <br>
+                <div class="dispData">
+                    <div class="smallInfo" v-for="(i, name, value) in user" v-bind:key="value">
+                        <b>{{name}}</b><br>{{i}}
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,6 +64,13 @@
 </script>
 
 <style scoped>
+    .playercontainer{
+        overflow: hidden;
+        overflow-y: scroll;
+        width: 100%;
+        height: 200%;
+    }
+
     .wavecon{
         top: 0;
         border-radius: 4px;
@@ -84,6 +93,11 @@
         padding: 8px;
         margin: 6px;
         flex-grow: 1;
+        max-width: 300px;
+        max-height: 200px;
+        overflow: hidden;
+        overflow-y: auto;
+        overflow-scrolling: auto;
     }
 
     .dispData{

@@ -25,6 +25,7 @@ import playerInfoComp from "@/components/playerInfoComp";
 import DebugComponent from "@/components/DebugComponent";
 import RegisterComponent from "@/components/RegisterComponent";
 import SshComponent from "@/components/SshComponent";
+import PlayComponent from "@/components/PlayComponent";
 
 const routes = [
   { path: '/info', component: InfoComponent },
@@ -34,6 +35,7 @@ const routes = [
   { path: '/debug', component: DebugComponent },
   { path: '/register', component: RegisterComponent },
   { path: '/ssh', component: SshComponent },
+  { path: '/play', component: PlayComponent },
 ];
 
 const router = new VueRouter({

@@ -31,7 +31,8 @@
                 username: "",
                 regkey: "",
                 getPath: "",
-                command: ""
+                command: "",
+                pathsallowed: ["/login", "/register", "/play"]
             }
         },
         methods: {
@@ -159,7 +160,7 @@
             },
             checkPath(path){
                 //Checks if logged in or trying to log in
-                let eitherPath = (path === '/login' || path === "/register");
+                let eitherPath = this.pathsallowed.contains(path);
                 if (!eitherPath && !this.authorized) {
                     console.log("log in first");
                     this.$router.push("/login");

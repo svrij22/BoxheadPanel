@@ -1,5 +1,12 @@
 <template>
     <div class="container">
+
+        <div class="video-background">
+            <div class="video-foreground">
+                <iframe src="https://www.youtube.com/embed/W0LHTWG-UmQ?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
         <div class="form">
             <b>{{regMsg}}</b>
             <br>
@@ -48,18 +55,14 @@
 </script>
 
 <style scoped>
+    @import '../assets/ytback.css';
+
     .container{
         width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
-    }
-
-    .form{
-        max-width: 500px;
-        max-height: 500px;
-        font-size: 23px;
     }
 
     input[type=text], input[type=password] {

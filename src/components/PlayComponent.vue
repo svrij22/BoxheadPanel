@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="box-container">
 
         <div class="video-background">
             <div class="video-foreground">
@@ -53,7 +53,7 @@
         width: inherit;
     }
 
-    .container{
+    .box-container{
         width: 100%;
         margin: 0!important;
     }

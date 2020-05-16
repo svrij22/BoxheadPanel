@@ -1,5 +1,5 @@
 <template>
-    <div class="infocomp">
+    <div class="infocomp bootstrap-wrapper">
         <div class="playercontainer">
             <h3>Search for player on name or id</h3>
             <input v-model="searchQuery">
@@ -9,10 +9,12 @@
                 </div>
                 <br>
                 <div class="dispData">
-                    <div class="smallInfo" v-for="(i, name, value) in user" v-bind:key="value">
-                        <b>{{name}}</b><br>{{i}}
-
+                    <div @click="toggleData(index, value)" class="smallInfo" v-for="(value, name, i) in (Object.assign(user, user.clientdata))" v-bind:key="i">
+                        <b>{{name}}</b><br>{{value}}
                     </div>
+                </div>
+                <div class="toggleInfo output" v-if="toggled == index">
+                    {{JSON.stringify(toggletext, null, "\t")}}
                 </div>
             </div>
         </div>
@@ -29,14 +31,17 @@
         data: function(){
             return {
                 searchQuery: "",
-                items: []
+                items: [],
+                toggled: -1,
+                toggletext: ""
             }
         },
         methods:{
             doSearch(){
                 let query = this.searchQuery;
+                this.toggleData(-1, "");
                 console.log(query);
-                if (query == ""){
+                if (query === ""){
                     console.log("empty");
                     this.items = _.take(this.serverData.data, 10);
                 }
@@ -45,6 +50,10 @@
                         return true;
                     }
                 });
+            },
+            toggleData(index, value){
+                this.toggled = index;
+                this.toggletext = value;
             }
         },
         watch: {
@@ -58,12 +67,13 @@
         },
         mounted(){
             //Set path
-            this.$emit('emitpath', "player", "");
+            this.$emit('emitpath', "playerdata", "");
         }
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
     .playercontainer{
         overflow: hidden;
         overflow-y: scroll;
@@ -87,14 +97,24 @@
         margin: 3px;
         position: relative;
     }
-    .smallInfo{
-        background: #e9e9e9;
+
+    .toggleInfo{
+        background: #f8f8f8;
         border-radius: 4px;
         padding: 8px;
+        margin: 10px;
+        width: 100%;
+    }
+    .smallInfo{
+        background: #e9e9e9;
+        border-radius: 8px;
+
+        padding: 8px;
         margin: 6px;
+
         flex-grow: 1;
         max-width: 300px;
-        max-height: 200px;
+        max-height: 120px;
         overflow: hidden;
         overflow-y: auto;
         overflow-scrolling: auto;

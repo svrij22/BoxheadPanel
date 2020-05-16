@@ -1,7 +1,7 @@
 <template>
-    <div class="container">
+    <div class="box-container">
         <div class="buttonContainer">
-            <button v-for="(buttonPath, index) in paths" v-bind:key="index" @click="buttonClick(buttonPath)">
+            <button class="box-button" v-for="(buttonPath, index) in paths" v-bind:key="index" @click="buttonClick(buttonPath)">
                 {{pathsNames[index]}}
             </button>
         </div>
@@ -11,7 +11,7 @@
         </div>
         <div class="clisend">
             <input class="cli-input" v-model="cliData">
-            <button class="clibtn" @click="buttonClickSend(cliData)">Send</button>
+            <button class="box-button clibtn" @click="buttonClickSend(cliData)">Send</button>
         </div>
     </div>
 </template>
@@ -47,7 +47,7 @@
         flex-wrap: wrap;
     }
 
-    .container{
+    .box-container{
         width: 100%;
         display: flex;
         flex-direction: column;

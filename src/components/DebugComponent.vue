@@ -1,12 +1,11 @@
 <template>
-    <div class="container">
+    <div class="box-container">
         <div class="buttonContainer">
-            <button v-for="(buttonPath, index) in paths" v-bind:key="index" @click="buttonClick(buttonPath)">
+            <button class="box-button" v-for="(buttonPath, index) in paths" v-bind:key="index" @click="buttonClick(buttonPath)">
                 {{pathsNames[index]}}
             </button>
-            <hr>
             <input v-model="addition">
-            <button v-for="buttonPath in pathsx" v-bind:key="buttonPath" @click="buttonClick(buttonPath + addition)">
+            <button class="box-button" v-for="buttonPath in pathsx" v-bind:key="buttonPath" @click="buttonClick(buttonPath + addition)">
                 {{buttonPath + addition}}
             </button>
         </div>
@@ -14,7 +13,7 @@
         <div class="output">
             {{serverData.data}}
         </div>
-        <button @click="serverData.data = JSON.stringify(serverData.data, null, '\t')">JSON Stringify</button>
+        <button class="box-button" @click="serverData.data = JSON.stringify(serverData.data, null, '\t')">JSON Stringify</button>
     </div>
 </template>
 
@@ -24,8 +23,8 @@
         name: "DebugComponent",
         data: function () {
             return {
-                paths: ["login", "serverlog", "info", "player", "json", "parsed", "sockets", "playerUpdate", "players", "registered", "save", "read", "resetserver", "resetdata"],
-                pathsNames: ["Login Auth Key", "Java Server Log", "Node Server Info", "Node Player Info", "JSON", "JSON PARSED", "Socket Info Excl", "Update Player Info", "All Player Class Instances", "Registered Players", "State Writer Save", "State Writer Read", "Reset Server", "Reset Data"],
+                paths: ["login", "serverlog", "info", "player", "playerdata", "messages", "json", "parsed", "sockets", "playerUpdate", "players", "registered", "save", "read", "resetserver", "resetdata"],
+                pathsNames: ["Login Auth Key", "Java Server Log", "Node Server Info", "Node Player Info", "Java Player Info","Java Message Data", "JSON", "JSON PARSED", "Socket Info Excl", "Update Player Info", "All Player Class Instances", "Registered Players", "State Writer Save", "State Writer Read", "Reset Server", "Reset Data"],
                 pathsx: ["player", "socket"],
                 addition: ""
             }
@@ -46,7 +45,7 @@
         flex-wrap: wrap;
     }
 
-    .container{
+    .box-container{
         width: 100%;
         display: flex;
         flex-direction: column;

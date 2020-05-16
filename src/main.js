@@ -1,6 +1,15 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from "vue-router";
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+// Install BootstrapVue
+Vue.use(BootstrapVue);
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin);
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -26,6 +35,7 @@ import DebugComponent from "@/components/DebugComponent";
 import RegisterComponent from "@/components/RegisterComponent";
 import SshComponent from "@/components/SshComponent";
 import PlayComponent from "@/components/PlayComponent";
+import MailComponent from "@/components/MailComponent";
 
 const routes = [
   { path: '/info', component: InfoComponent },
@@ -36,6 +46,7 @@ const routes = [
   { path: '/register', component: RegisterComponent },
   { path: '/ssh', component: SshComponent },
   { path: '/play', component: PlayComponent },
+  { path: '/mail', component: MailComponent },
 ];
 
 const router = new VueRouter({

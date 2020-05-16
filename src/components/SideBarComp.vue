@@ -13,6 +13,7 @@
                     <router-link to="/user">User info</router-link>
                     <router-link to="/debug">Debugger</router-link>
                     <router-link to="/ssh">SSH CLI</router-link>
+                    <router-link to="/mail">Mail</router-link>
                 </div>
                 <div v-else>
                     <router-link to="/login">Login</router-link>
@@ -24,7 +25,7 @@
             <div class="username">
                 <font-awesome-icon icon="user" /> {{username}}
             </div>
-            <button @click="emitClick"> Logout </button>
+            <button @click="emitClick" class="box-button"> Logout </button>
         </div>
     </div>
 </template>

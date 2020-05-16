@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="box-container">
 
         <div class="video-background">
             <div class="video-foreground">
@@ -15,7 +15,7 @@
             <input v-model="username" type="text" placeholder="Enter Username" required>
             <label><b>Password</b></label>
             <input v-model="passw" type="password" placeholder="Enter Password" required>
-            <button @click="auth" type="submit">Login</button>
+            <button class="box-button" @click="auth" type="submit">Login</button>
         </div>
     </div>
 </template>
@@ -41,7 +41,7 @@
 <style scoped>
     @import '../assets/ytback.css';
 
-    .container{
+    .box-container{
         width: 100%;
         display: flex;
         flex-direction: row;

@@ -46,8 +46,8 @@
                     command: this.command
                 };
 
-                //axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
-                axios.get(`http://${this.serverAddress}:80/boxhead/restservices/game/${this.getPath}`, {
+                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
+                //axios.get(`http://${this.serverAddress}:80/boxhead/restservices/game/${this.getPath}`, {
                     headers: headers
                 })
                     .then((response) => {
@@ -188,6 +188,7 @@
 </script>
 
 <style>
+
     @font-face {
         font-family: 'Poppins';
         font-style: normal;
@@ -239,7 +240,8 @@
 
 
     .output{
-        overflow: scroll;
+        overflow: hidden;
+        overflow-y: auto;
         white-space: pre-wrap;
         text-align: left!important;
         height: 100%;
@@ -248,7 +250,7 @@
         width: 100%;
     }
 
-    button {
+    .box-button{
         background-color: #af211c;
         color: white;
         padding: 15px;
@@ -264,7 +266,7 @@
 
     input{
         padding: 12px 20px;
-        margin: 8px 0;
+        margin: 8px 0!important;
         display: inline-block;
         border: 1px solid #ccc;
         box-sizing: border-box;

@@ -24,7 +24,7 @@
         },
         data: function () {
             return {
-                serverAddress: "localhost",
+                serverAddress: "136.144.191.118",
                 serverData: "",
                 auth: "",
                 authorized: true,
@@ -46,7 +46,7 @@
                     command: this.command
                 };
 
-                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
+                axios.get(`http://${this.serverAddress}:8091/boxhead/restservices/game/${this.getPath}`, {
                 //axios.get(`http://${this.serverAddress}:80/boxhead/restservices/game/${this.getPath}`, {
                     headers: headers
                 })

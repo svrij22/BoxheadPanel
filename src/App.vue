@@ -2,11 +2,14 @@
     <div id="app">
         <side-bar-comp
                 :server-address="serverAddress"
-                :isAuth="authorized"
+                :isAuth="sessiontoken"
                 @emitlogout="doLogout"
                 :username="username"
         />
         <router-view :server-data="serverData" @emitauth="setAuth" @emitpath="setPath" id="view"></router-view>
+        <div id="note">
+            <b>{{servernote}}</b>
+        </div>
     </div>
 </template>
 
@@ -16,6 +19,7 @@
     import sha256 from 'crypto-js/sha256';
     import hmacSHA512 from 'crypto-js/hmac-sha512';
     import Base64 from 'crypto-js/enc-base64';
+    import Utf8 from 'crypto-js/enc-utf8';
 
     export default {
         name: 'App',
@@ -24,47 +28,36 @@
         },
         data: function () {
             return {
-                serverAddress: "136.144.191.118",
+                serverAddress: "localhost",
                 serverData: "",
                 auth: "",
-                authorized: true,
+                getPath: "",
+                pathsallowed: ["/login", "/register", "/play"],
+
+                command: "",
                 username: "",
                 regkey: "",
-                getPath: "",
-                command: "",
-                pathsallowed: ["/login", "/register", "/play"]
+                sessiontoken: window.sessionStorage.getItem("sessionToken"),
+                servernote: ""
             }
         },
         methods: {
             getServerData: function(){
                 console.log("Request");
+                this.servernote = "";
 
                 let headers = {
-                    authkey: this.auth,
-                    name: this.username,
-                    regkey: this.regkey,
-                    command: this.command
+                    Authorization: this.generateAuth()
                 };
 
-                axios.get(`http://${this.serverAddress}:8091/boxhead/restservices/game/${this.getPath}`, {
-                //axios.get(`http://${this.serverAddress}:80/boxhead/restservices/game/${this.getPath}`, {
+                //axios.get(`http://${this.serverAddress}:8091/boxhead/restservices/game/${this.getPath}`, {
+                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
                     headers: headers
                 })
                     .then((response) => {
                         // handle success
                         this.serverData = response;
                         this.serverData.address = this.serverAddress;
-
-                        //If got response and trying to log in
-                        let path = this.$route.path;
-
-                        //If trying to login or register move to info
-                        if (path === '/login' || path === "/register") {
-                            if (response.data) {
-                                this.authorized = true;
-                                this.$router.push("/info");
-                            }
-                        }
                     })
                     .catch((error) => {
                         // handle error
@@ -72,6 +65,7 @@
 
                         //Register error as response
                         this.serverData = error.response.status;
+                        this.servernote = error.response.status + " - Sorry :(";
 
                         //If error and not logged in
                         this.checkPath(this.$route.path);
@@ -85,15 +79,64 @@
             setDataTimer(){
                 this.getServerData();
             },
+            tryLogin(){
+                console.log("Login attempt");
+                this.servernote = "";
+
+                let headers = {
+                    Authorization: this.generateAuth()
+                };
+
+                //axios.get(`http://${this.serverAddress}:8091/boxhead/restservices/game/${this.getPath}`, {
+                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
+                    headers: headers
+                })
+                    .then((response) => {
+
+                        // handle success
+                        this.sessiontoken = response.data;
+                        window.sessionStorage.setItem("sessionToken", this.sessiontoken);
+
+                        //If trying to login or register move to info
+                        let path = this.$route.path;
+                        if (path === '/login' || path === "/register") {
+                            if (response.data) {
+                                this.authorized = true;
+                                this.$router.push("/info");
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // handle error
+                        console.log (error);
+
+
+                        //Register error
+                        let status = "Error";
+                        if (error?.response?.status) status = error?.response?.status;
+
+                        this.serverData = status;
+                        this.servernote = status + " - " + error.toString() + " - Sorry :(";
+                    })
+            },
             setAuth(passw, username, regkey){
                 if (passw === undefined) return;
+
                 const privateKey = "BOXHEAD";
                 const hashDigest = sha256("authkey" + passw);
                 this.auth = Base64.stringify(hmacSHA512(hashDigest, privateKey));
+
                 this.username = username;
                 this.regkey = regkey;
-                this.getServerData();
-                console.log (this.auth)
+
+                this.tryLogin();
+            },
+            generateAuth() {
+                // PW ? UN ? REGKEY ? SESSIONTOKEN
+                return this.auth + "."
+                    + Base64.stringify(Utf8.parse(this.username)) + "."
+                    + Base64.stringify(Utf8.parse(this.regkey)) + "."
+                    + Base64.stringify(Utf8.parse(window.sessionStorage.getItem("sessionToken")));
             },
             setPath(path, cmd){
                 this.getPath = path;
@@ -104,7 +147,8 @@
                 console.log ("logging out");
                 this.auth = "";
                 this.username = "";
-                this.authorized = false;
+                this.sessiontoken = "";
+                window.sessionStorage.setItem("sessionToken", "");
                 this.$router.push("/login");
             },
             fauxData(){
@@ -161,7 +205,8 @@
             checkPath(path){
                 //Checks if logged in or trying to log in
                 let eitherPath = this.pathsallowed.contains(path);
-                if (!eitherPath && !this.authorized) {
+                console.log(eitherPath);
+                if (!eitherPath && !this.sessiontoken){
                     console.log("log in first");
                     this.$router.push("/login");
                 }
@@ -169,7 +214,7 @@
         },
         mounted() {
             // eslint-disable-next-line no-unused-vars
-            //const dataTimer = setInterval(this.getServerData, 2000);
+            const dataTimer = setInterval(this.getServerData, 2000);
 
             //on mounted if logged in goto info
             if (this.authorized && this.$route.path === '/'){
@@ -179,7 +224,6 @@
         watch:{
             // eslint-disable-next-line no-unused-vars
             $route (to, from){
-
                 //Still retry server data get
                 this.checkPath(to.path);
             }
@@ -270,6 +314,44 @@
         display: inline-block;
         border: 1px solid #ccc;
         box-sizing: border-box;
+    }
+
+    #note {
+        position: absolute;
+        z-index: 101;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #fd8181;
+        text-align: center;
+        line-height: 3;
+        overflow: hidden;
+        -webkit-box-shadow: 0 0 10px black;
+        -moz-box-shadow:    0 0 10px black;
+        box-shadow:         0 0 10px black;
+
+        animation:
+                pulse
+                1.5s
+                ease-out
+                infinite
+                alternate
+                running;
+    }
+
+    @keyframes pulse {
+        0% {
+            background-color: #ffff30;
+            top: -50px;
+        }
+        50% {
+            background-color: #ff564f;
+            transform: scale(1.1, 1.1);
+        }
+        100% {
+            background-color: #ff564f;
+            top: 0px;
+        }
     }
 
 </style>

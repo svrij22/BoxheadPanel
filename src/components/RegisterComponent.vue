@@ -47,9 +47,11 @@
         },
         methods: {
             auth(){
-                this.$emit('emitpath', "register", "");
                 this.$emit('emitauth', this.passw, this.username, this.regkey);
             }
+        },
+        mounted(){
+            this.$emit('emitpath', "register", "");
         }
     }
 </script>

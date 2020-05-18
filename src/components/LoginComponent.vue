@@ -31,9 +31,11 @@
         },
         methods: {
             auth(){
-                this.$emit('emitpath', "login", "");
                 this.$emit('emitauth', this.passw, this.username, "");
             }
+        },
+        mounted(){
+            this.$emit('emitpath', "login", "");
         }
     }
 </script>

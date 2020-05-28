@@ -50,8 +50,7 @@
                     Authorization: this.generateAuth()
                 };
 
-                //axios.get(`http://${this.serverAddress}:8091/boxhead/restservices/game/${this.getPath}`, {
-                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
+                axios.get(`http://${this.serverAddress}/boxhead/restservices/game/${this.getPath}`, {
                     headers: headers
                 })
                     .then((response) => {
@@ -63,9 +62,11 @@
                         // handle error
                         console.log (error);
 
-                        //Register error as response
-                        this.serverData = error.response.status;
-                        this.servernote = error.response.status + " - Sorry :(";
+                        //Register error
+                        let status = "Error";
+                        if (error?.response?.status) status = error?.response?.status;
+                        this.serverData = status;
+                        this.servernote = status + " - " + error.toString() + " - Sorry :(";
 
                         //If error and not logged in
                         this.checkPath(this.$route.path);
@@ -88,7 +89,7 @@
                 };
 
                 //axios.get(`http://${this.serverAddress}:8091/boxhead/restservices/game/${this.getPath}`, {
-                axios.get(`http://${this.serverAddress}:8090/restservices/game/${this.getPath}`, {
+                axios.get(`http://${this.serverAddress}/boxhead/restservices/game/${this.getPath}`, {
                     headers: headers
                 })
                     .then((response) => {
@@ -214,7 +215,7 @@
         },
         mounted() {
             // eslint-disable-next-line no-unused-vars
-            const dataTimer = setInterval(this.getServerData, 2000);
+            //const dataTimer = setInterval(this.getServerData, 2000);
 
             //on mounted if logged in goto info
             if (this.authorized && this.$route.path === '/'){

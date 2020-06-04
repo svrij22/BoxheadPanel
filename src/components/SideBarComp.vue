@@ -2,7 +2,7 @@
     <div class="sidenav" v-bind:class="{ bindBottomNav: isBottom}" ref="nav">
             <div v-if="!isBottom">
                 <div class="logo" v-if="!isBottom">
-                    <img src="../assets/logo.png"/>
+                    <img src="../assets/logo.png" alt="Boxhead logo navbar"/>
                 </div>
                 <b>{{this.$store.state.serverAddress}}</b>
             </div>

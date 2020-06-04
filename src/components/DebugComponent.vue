@@ -23,8 +23,8 @@
         name: "DebugComponent",
         data: function () {
             return {
-                paths: ["login", "serverlog", "info", "player", "playerdata", "messages", "json", "parsed", "sockets", "playerUpdate", "players", "registered", "save", "read", "resetserver", "resetdata"],
-                pathsNames: ["Login Auth Key", "Java Server Log", "Node Server Info", "Node Player Info", "Java Player Info","Java Message Data", "JSON", "JSON PARSED", "Socket Info Excl", "Update Player Info", "All Player Class Instances", "Registered Players", "State Writer Save", "State Writer Read", "Reset Server", "Reset Data"],
+                paths: ["log", "game/info", "player/json", "player", "game/messages", "game/json", "game/parsed", "game/sockets", "player/update", "game/json", "game/registered", "server/save", "server/read", "server/reset", "server/data"],
+                pathsNames: ["Java Server Log", "Node Server Info", "Node Player Info", "Java Player Info","Java Message Data", "JSON", "JSON PARSED", "Socket Info Excl", "Update Player Info", "All Player Class Instances", "Registered Players", "State Writer Save", "State Writer Read", "Reset Server", "Reset Data"],
                 pathsx: ["player", "socket"],
                 addition: ""
             }
@@ -49,5 +49,6 @@
         width: 100%;
         display: flex;
         flex-direction: column;
+        overflow-y: hidden;
     }
 </style>

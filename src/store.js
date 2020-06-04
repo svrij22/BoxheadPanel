@@ -9,11 +9,12 @@ export default new Vuex.Store({
         loggedIn: false,
         username: "",
         role: "",
-        version: 1
+        version: 1,
+        serverAddress: "localhost"
     },
     mutations: {
         setLog(state, data) {state.loggedIn = data},
-        setName(state, data) {state.uname = data},
+        setName(state, data) {state.username = data},
         setRole(state, data) {state.role = data},
         initialiseStore(state) {
             // Check if the store exists

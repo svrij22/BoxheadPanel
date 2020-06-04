@@ -10,6 +10,7 @@
                     <b>Sender: {{mail.sender}}</b>
                 </div>
             </div>
+            <button class="box-button">New message</button>
         </div>
         <div class="textbox" v-if="serverData.data[messageSet]">
             <b>Title:</b> {{serverData.data[messageSet].title}}<br>
@@ -34,27 +35,19 @@
         },
         mounted() {
             //Set path
-            this.$emit('emitpath', "messages", "")
+            this.$emit('emitpath', "game/messages", "")
         }
     }
 </script>
 
 <style scoped>
+
     .mail-container{
         width: 100%;
         display: flex;
         flex-direction: row;
     }
 
-    .mailbox{
-        height: 100%;
-        width: 100%;
-        max-width: 500px;
-
-        border: 3px solid #dddddd;
-        border-radius: 8px;
-        padding: 8px;
-    }
 
     .textbox{
         text-align: left;
@@ -66,6 +59,31 @@
         margin-left: 9px;
         font-size: 25px;
     }
+
+    @media only screen and (max-width: 800px) {
+        .mail-container {
+            flex-direction: column;
+        }
+
+        .textbox{
+            margin-left: 0px;
+            margin-top: 8px;
+        }
+    }
+
+    .mailbox{
+        height: 100%;
+        width: 100%;
+        max-width: 500px;
+
+        border: 3px solid #dddddd;
+        border-radius: 8px;
+        padding: 8px;
+
+        display: flex;
+        flex-direction: column;
+    }
+
 
     .mail{
         height: 100px;
@@ -84,5 +102,12 @@
 
     .icon{
         font-size: 30px;
+    }
+
+    .box-button{
+        margin: 0px;
+        margin-top: auto;
+        width: 100%;
+        flex-grow: 0;
     }
 </style>

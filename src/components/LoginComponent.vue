@@ -3,7 +3,8 @@
 
         <div class="video-background">
             <div class="video-foreground">
-                <iframe src="https://www.youtube.com/embed/W0LHTWG-UmQ?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/W0LHTWG-UmQ?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ"
+                        frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
 
@@ -14,27 +15,68 @@
             <label><b>Username</b></label>
             <input v-model="username" type="text" placeholder="Enter Username" required>
             <label><b>Password</b></label>
-            <input v-model="passw" type="password" placeholder="Enter Password" required>
+            <input v-model="password" type="password" placeholder="Enter Password" required>
             <button class="box-button" @click="auth" type="submit">Login</button>
+        </div>
+
+        <div id="note">
+            <b>{{servernote}}</b>
         </div>
     </div>
 </template>
 
 <script>
+    import axios from "axios";
+    import querystring from 'query-string';
+
     export default {
         name: "LoginComponent",
-        data: function(){
-            return{
+        data: function () {
+            return {
                 username: "",
-                passw: ""
+                password: "",
+                servernote: ""
             }
         },
         methods: {
-            auth(){
-                this.$emit('emitauth', this.passw, this.username, "");
+            auth() {
+                //Do a request
+                console.log("Login attempt");
+                this.servernote = "";
+
+                axios.post(`http://${this.$store.state.serverAddress}/authentication/`, querystring.stringify({
+                    username: this.username,
+                    password: this.password
+                }))
+                    .then((response) => {
+
+                        //If trying to login or register move to info
+                        let path = this.$route.path;
+                        if (path === '/login' || path === "/register") {
+                            if (response.data.JWT) {
+                                window.sessionStorage.setItem("JWT", response.data.JWT);
+                                this.$store.commit('setLog', true);
+                                this.$store.commit('setName', this.username);
+                                this.$store.commit('setRole', response.data.role);
+                                this.$store.commit('saveStore');
+                                this.$router.push("/info");
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // handle error
+                        console.log(error);
+
+                        //Register error
+                        let status = "Error";
+                        if (error?.response?.status) status = error?.response?.status;
+
+                        this.serverData = status;
+                        this.servernote = status + " - " + error.toString() + " - We're sorry :(";
+                    })
             }
         },
-        mounted(){
+        mounted() {
             this.$emit('emitpath', "login", "");
         }
     }
@@ -43,7 +85,7 @@
 <style scoped>
     @import '../assets/ytback.css';
 
-    .box-container{
+    .box-container {
         width: 100%;
         display: flex;
         flex-direction: row;

@@ -67,12 +67,15 @@
         },
         mounted(){
             //Set path
-            this.$emit('emitpath', "playerdata", "");
+            this.$emit('emitpath', "player", "");
         }
     }
 </script>
 
 <style scoped lang="scss">
+    .infocomp{
+        overflow-y: hidden;
+    }
 
     .playercontainer{
         overflow: hidden;

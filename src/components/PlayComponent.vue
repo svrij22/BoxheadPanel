@@ -10,12 +10,12 @@
         <div id="vidtop-content" class="playbox">
             <div class="gameform">
                 <img src="@/assets/logo.png" class="logo">
-                <h1>
-                    Free to play
-                </h1>
                 <h2>
-                    Boxhead is a multiplayer zombie shooter now available on the Play Store!
+                    Free to play
                 </h2>
+                <h3>
+                    Boxhead is a multiplayer zombie shooter now available on the Play Store!
+                </h3>
                 <img src="@/assets/googlelink.png" class="button">
             </div>
         </div>
@@ -43,13 +43,13 @@
     .logo{
         margin-top: 50px;
         padding: 10px;
-        max-width: 700px;
+        max-width: 400px;
         width: inherit;
     }
 
     .button{
         padding: 50px;
-        max-width: 500px;
+        max-width: 300px;
         width: inherit;
     }
 

@@ -91,11 +91,9 @@
                 return socket.remote.address + " on port " + socket.remote.port + " with username " + socket.name
             },
             secondsFormat(seconds){
-                let dateStr = (new Date).clearTime()
+                return (new Date).clearTime()
                     .addSeconds(seconds)
                     .toString('H:mm:ss');
-
-                return dateStr;
             },
             calcPacketPerc(packets){
                 return Math.round((packets / this.serverData.data.packets) * 100)
@@ -122,12 +120,16 @@
         },
         mounted() {
             //Set path
-            this.$emit('emitpath', "info", "")
+            this.$emit('emitpath', "game/info", "")
         }
     }
 </script>
 
 <style scoped>
+
+    .infocomp{
+        overflow-y: scroll;
+    }
 
     .infobox{
         border: 3px solid #dddddd;
@@ -201,6 +203,12 @@
     .infocontent{
         display: flex;
         flex-direction: row;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .infocontent{
+            flex-direction: column;
+        }
     }
 
     .col{

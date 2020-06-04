@@ -25,7 +25,6 @@
 </template>
 
 <script>
-
     import _ from 'lodash';
 
     export default {
@@ -59,12 +58,17 @@
         },
         mounted() {
             //Set path
-            this.$emit('emitpath', "info", "")
+            this.$emit('emitpath', "game/info", "")
         }
     }
 </script>
 
 <style scoped>
+
+
+    .infocomp{
+        overflow-y: scroll;
+    }
 
     .infocontent{
         display: flex;

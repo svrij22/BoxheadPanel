@@ -22,7 +22,7 @@
         name: "DebugComponent",
         data: function () {
             return {
-                paths: ["startshell", "shell", "shellreset"],
+                paths: ["shell/start", "shell", "shell/reset"],
                 pathsNames: ["Test command", "Get Shell Output", "Reset shell"],
                 cliData: ""
             }
@@ -53,6 +53,7 @@
         flex-direction: column;
         background-color: #122e00;
         margin: 0!important;
+        overflow-y: hidden;
     }
 
     .console {

@@ -3,7 +3,8 @@
 
         <div class="video-background">
             <div class="video-foreground">
-                <iframe src="https://www.youtube.com/embed/W0LHTWG-UmQ?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/W0LHTWG-UmQ?controls=0&showinfo=0&rel=0&autoplay=1&loop=1&playlist=W0LHTWG-UmQ"
+                        frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
 
@@ -14,44 +15,73 @@
             <label><b>Username</b></label>
             <input v-model="username" type="text" placeholder="Enter Username" required>
             <label><b>Password</b></label>
-            <input v-model="passw" type="password" placeholder="Enter Password" required>
+            <input v-model="password" type="password" placeholder="Enter Password" required>
             <label><b>Register key</b></label>
             <input v-model="regkey" type="text" placeholder="Enter Register key" required>
             <button class="box-button" @click="auth" type="submit">Register</button>
+        </div>
+
+        <div id="note">
+            <b>{{servernote}}</b>
         </div>
     </div>
 </template>
 
 <script>
 
+    import axios from "axios";
+    import querystring from "query-string";
+
     export default {
-        props: ['serverData'],
         name: "LoginComponent",
-        data: function(){
-            return{
+        data: function () {
+            return {
                 username: "",
-                passw: "",
+                password: "",
                 regkey: "",
-                regMsg: "Register Please"
-            }
-        },
-        watch:{
-            serverData: function(val){
-                console.log(val);
-                if (this.serverData === 404) this.regMsg = "Can't find player";
-                if (this.serverData === 409) this.regMsg = "Username taken";
-                if (this.serverData === 401) this.regMsg = "Register Key already taken";
-                if (this.serverData === 428) this.regMsg = "Fill in username and a (better) password";
-                this.serverData = "";
+                regMsg: "Register Please",
+                servernote: ""
             }
         },
         methods: {
-            auth(){
-                this.$emit('emitauth', this.passw, this.username, this.regkey);
+            auth: function () {
+                //Do a request
+                console.log("Register attempt");
+                this.servernote = "";
+
+                axios.post(`http://${this.$store.state.serverAddress}/authentication/register`, querystring.stringify({
+                    username: this.username,
+                    password: this.password,
+                    regkey: this.regkey
+                }))
+                    .then((response) => {
+
+                        //If trying to login or register move to info
+                        let path = this.$route.path;
+                        if (path === '/login' || path === "/register") {
+                            if (response.data.JWT) {
+                                window.sessionStorage.setItem("JWT", response.data.JWT);
+                                this.$store.commit('setLog', true);
+                                this.$store.commit('setName', this.username);
+                                this.$store.commit('setRole', response.data.role);
+                                this.$store.commit('saveStore');
+                                this.$router.push("/info");
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // handle error
+                        console.log(error);
+
+                        //Check status
+                        this.servernote = "An error occurred"
+                        if (error?.response?.data) {
+                            this.servernote = error?.response?.data;
+                            this.regMsg = error?.response?.data;
+                        }
+                        this.servernote += " - " + error.toString() + " - We're sorry :(";
+                    })
             }
-        },
-        mounted(){
-            this.$emit('emitpath', "register", "");
         }
     }
 </script>
@@ -59,7 +89,7 @@
 <style scoped>
     @import '../assets/ytback.css';
 
-    .box-container{
+    .box-container {
         width: 100%;
         display: flex;
         flex-direction: row;

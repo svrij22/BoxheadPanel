@@ -1,25 +1,17 @@
 <template>
     <div id="app">
-        <side-bar-comp
-                :server-address="serverAddress"
-                :isAuth="sessiontoken"
-                @emitlogout="doLogout"
-                :username="username"
-        />
-        <router-view :server-data="serverData" @emitauth="setAuth" @emitpath="setPath" id="view"></router-view>
+        <side-bar-comp/>
+        <router-view :server-data="serverData" @emitpath="setPath" id="view"></router-view>
         <div id="note">
             <b>{{servernote}}</b>
         </div>
+        <side-bar-comp class="bottom-disp" is-bottom="true"/>
     </div>
 </template>
 
 <script>
     import SideBarComp from "@/components/SideBarComp";
     import axios from "axios";
-    import sha256 from 'crypto-js/sha256';
-    import hmacSHA512 from 'crypto-js/hmac-sha512';
-    import Base64 from 'crypto-js/enc-base64';
-    import Utf8 from 'crypto-js/enc-utf8';
 
     export default {
         name: 'App',
@@ -28,29 +20,31 @@
         },
         data: function () {
             return {
-                serverAddress: "localhost",
                 serverData: "",
-                auth: "",
-                getPath: "",
-                pathsallowed: ["/login", "/register", "/play"],
-
-                command: "",
-                username: "",
-                regkey: "",
-                sessiontoken: window.sessionStorage.getItem("sessionToken"),
-                servernote: ""
+                servernote: "",
+                getPath: ""
             }
         },
         methods: {
             getServerData: function(){
-                console.log("Request");
-                this.servernote = "";
 
-                let headers = {
-                    Authorization: this.generateAuth()
+                //Do a request
+                console.log("Request");
+
+                //Note is empty
+                this.servernote = "";
+                if (!this.$store.state.loggedIn) {
+                    this.servernote = "Not logged in";
+                    return;
+                }
+
+                //Headers
+                const headers = {
+                    'Authorization': 'Bearer' + window.sessionStorage.getItem("JWT"),
                 };
 
-                axios.get(`http://${this.serverAddress}/boxhead/restservices/game/${this.getPath}`, {
+                //Do get
+                axios.get(`http://${this.$store.state.serverAddress}/rest/${this.getPath}`, {
                     headers: headers
                 })
                     .then((response) => {
@@ -67,9 +61,6 @@
                         if (error?.response?.status) status = error?.response?.status;
                         this.serverData = status;
                         this.servernote = status + " - " + error.toString() + " - Sorry :(";
-
-                        //If error and not logged in
-                        this.checkPath(this.$route.path);
                     })
                 .finally(() =>{
                     //set faux data
@@ -80,77 +71,9 @@
             setDataTimer(){
                 this.getServerData();
             },
-            tryLogin(){
-                console.log("Login attempt");
-                this.servernote = "";
-
-                let headers = {
-                    Authorization: this.generateAuth()
-                };
-
-                //axios.get(`http://${this.serverAddress}:8091/boxhead/restservices/game/${this.getPath}`, {
-                axios.get(`http://${this.serverAddress}/boxhead/restservices/game/${this.getPath}`, {
-                    headers: headers
-                })
-                    .then((response) => {
-
-                        // handle success
-                        this.sessiontoken = response.data;
-                        window.sessionStorage.setItem("sessionToken", this.sessiontoken);
-
-                        //If trying to login or register move to info
-                        let path = this.$route.path;
-                        if (path === '/login' || path === "/register") {
-                            if (response.data) {
-                                this.authorized = true;
-                                this.$router.push("/info");
-                            }
-                        }
-                    })
-                    .catch((error) => {
-                        // handle error
-                        console.log (error);
-
-
-                        //Register error
-                        let status = "Error";
-                        if (error?.response?.status) status = error?.response?.status;
-
-                        this.serverData = status;
-                        this.servernote = status + " - " + error.toString() + " - Sorry :(";
-                    })
-            },
-            setAuth(passw, username, regkey){
-                if (passw === undefined) return;
-
-                const privateKey = "BOXHEAD";
-                const hashDigest = sha256("authkey" + passw);
-                this.auth = Base64.stringify(hmacSHA512(hashDigest, privateKey));
-
-                this.username = username;
-                this.regkey = regkey;
-
-                this.tryLogin();
-            },
-            generateAuth() {
-                // PW ? UN ? REGKEY ? SESSIONTOKEN
-                return this.auth + "."
-                    + Base64.stringify(Utf8.parse(this.username)) + "."
-                    + Base64.stringify(Utf8.parse(this.regkey)) + "."
-                    + Base64.stringify(Utf8.parse(window.sessionStorage.getItem("sessionToken")));
-            },
-            setPath(path, cmd){
+            setPath(path){
                 this.getPath = path;
-                this.command = cmd;
                 this.getServerData();
-            },
-            doLogout(){
-                console.log ("logging out");
-                this.auth = "";
-                this.username = "";
-                this.sessiontoken = "";
-                window.sessionStorage.setItem("sessionToken", "");
-                this.$router.push("/login");
             },
             fauxData(){
 
@@ -203,15 +126,6 @@
                 dataMap2.push(remoteData);
                 console.log(remoteData);
             },
-            checkPath(path){
-                //Checks if logged in or trying to log in
-                let eitherPath = this.pathsallowed.contains(path);
-                console.log(eitherPath);
-                if (!eitherPath && !this.sessiontoken){
-                    console.log("log in first");
-                    this.$router.push("/login");
-                }
-            }
         },
         mounted() {
             // eslint-disable-next-line no-unused-vars
@@ -220,13 +134,6 @@
             //on mounted if logged in goto info
             if (this.authorized && this.$route.path === '/'){
                 this.$router.push("/info");
-            }
-        },
-        watch:{
-            // eslint-disable-next-line no-unused-vars
-            $route (to, from){
-                //Still retry server data get
-                this.checkPath(to.path);
             }
         }
     }
@@ -256,6 +163,24 @@
 
         width: 100%;
     }
+
+    @media only screen and (max-width: 500px) {
+        #app {
+            display: block;
+            overflow-y: auto;
+        }
+        #view{
+            margin: 0px!important;
+            padding: 8px!important;
+        }
+    }
+
+    @media only screen and (min-width: 500px) {
+        .bottom-disp{
+            display: none!important;
+        }
+    }
+
 
     html {
         height: 100%;

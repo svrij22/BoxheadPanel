@@ -7,19 +7,31 @@
                     <b>{{mail.title}}</b>
                 </div>
                 <div>
-                    <b>Sender: {{mail.sender}}</b>
+                    <b v-if="mail.sender">Sender:{{mail.sender}}</b>
+                    <b v-else> Admin message</b>
                 </div>
             </div>
             <button class="box-button">New message</button>
         </div>
-        <div class="textbox" v-if="serverData.data[messageSet]">
-            <b>Title:</b> {{serverData.data[messageSet].title}}<br>
-            <div v-if="serverData.data[messageSet].sender">
-                <b>Sender:</b> {{serverData.data[messageSet].sender.username}}<br>
+        <div class="textboxes">
+            <div class="textbox" v-if="serverData.data[messageSet]">
+                <b>Title</b> {{serverData.data[messageSet].title}}<br>
+                <div v-if="serverData.data[messageSet].sender">
+                    <b>Sender</b> {{serverData.data[messageSet].sender.username}}<br>
+                </div>
+                <b>Recipient</b> {{serverData.data[messageSet].recipient.username}}<br>
+                <hr>
+                {{serverData.data[messageSet].body}}
             </div>
-            <b>Recipient:</b> {{serverData.data[messageSet].recipient.username}}<br>
-            <br>
-            {{serverData.data[messageSet].body}}
+            <div class="textbox" v-if="serverData.data[messageSet]">
+                <b>Title</b> {{serverData.data[messageSet].title}}<br>
+                <div v-if="serverData.data[messageSet].sender">
+                    <b>Sender</b> {{serverData.data[messageSet].sender.username}}<br>
+                </div>
+                <b>Recipient</b> {{serverData.data[messageSet].recipient.username}}<br>
+                <hr>
+                {{serverData.data[messageSet].body}}
+            </div>
         </div>
     </div>
 </template>
@@ -57,7 +69,7 @@
         border-radius: 8px;
         padding: 16px;
         margin-left: 9px;
-        font-size: 25px;
+        font-size: 20px;
     }
 
     @media only screen and (max-width: 800px) {
@@ -84,6 +96,11 @@
         flex-direction: column;
     }
 
+    .textboxes{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
     .mail{
         height: 100px;

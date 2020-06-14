@@ -152,23 +152,31 @@
 
     #app {
         font-family: 'Poppins', sans-serif;
-
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-
         display: flex;
         flex-direction: row;
-
         width: 100%;
+    }
+
+    .infocomp{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        padding: 32px;
     }
 
     @media only screen and (max-width: 500px) {
         #app {
-            display: block;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
         }
+
         #view{
             margin: 0px!important;
             padding: 8px!important;
@@ -179,8 +187,11 @@
         .bottom-disp{
             display: none!important;
         }
-    }
 
+        .infocomp{
+            overflow-y: scroll;
+        }
+    }
 
     html {
         height: 100%;
@@ -199,16 +210,6 @@
         margin: 8px;
     }
 
-    .infocomp{
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        align-items: center;
-        padding: 32px;
-    }
-
-
     .output{
         overflow: hidden;
         overflow-y: auto;
@@ -218,6 +219,7 @@
         margin: 8px;
         background: #f9e6e6;
         width: 100%;
+        max-height: 2000px;
     }
 
     .box-button{

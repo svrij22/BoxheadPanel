@@ -10,7 +10,7 @@ export default new Vuex.Store({
         username: "",
         role: "",
         version: 1,
-        serverAddress: "localhost"
+        serverAddress: "localhost:8000"
     },
     mutations: {
         setLog(state, data) {state.loggedIn = data},

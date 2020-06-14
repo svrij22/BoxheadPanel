@@ -53,7 +53,6 @@
         flex-direction: column;
         background-color: #122e00;
         margin: 0!important;
-        overflow-y: hidden;
     }
 
     .console {

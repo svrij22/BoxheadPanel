@@ -6,7 +6,6 @@
                 </div>
                 <b>{{this.$store.state.serverAddress}}</b>
             </div>
-        {{mediaQueryActive}}
             <div class="side-content" v-if="isBottom || !mq">
 
                 <div class="menu">
@@ -56,6 +55,8 @@
         },
         mounted() {
             window.matchMedia('(max-width: 500px)').addListener( (e) => this.mq = e.matches);
+            var w = window.innerWidth;
+            this.mq = (w <= 500)
         }
     }
 </script>
@@ -74,12 +75,18 @@
         min-width: 240px;
         z-index: 1;
         background-color: #111;
-        overflow-x: hidden;
         padding-top: 20px;
         padding-bottom: 16px;
 
+        overflow-x: hidden;
         display: flex;
         flex-direction: column;
+    }
+
+    @media only screen and (max-width: 500px) {
+        .sidenav {
+            overflow-x: unset;
+        }
     }
 
     .bindBottomNav {

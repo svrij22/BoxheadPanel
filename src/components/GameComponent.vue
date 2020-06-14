@@ -65,11 +65,6 @@
 
 <style scoped>
 
-
-    .infocomp{
-        overflow-y: scroll;
-    }
-
     .infocontent{
         display: flex;
         flex-direction: row;

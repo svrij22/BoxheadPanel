@@ -73,9 +73,6 @@
 </script>
 
 <style scoped lang="scss">
-    .infocomp{
-        overflow-y: hidden;
-    }
 
     .playercontainer{
         overflow: hidden;

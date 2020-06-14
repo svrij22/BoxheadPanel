@@ -127,10 +127,6 @@
 
 <style scoped>
 
-    .infocomp{
-        overflow-y: scroll;
-    }
-
     .infobox{
         border: 3px solid #dddddd;
         border-radius: 8px;

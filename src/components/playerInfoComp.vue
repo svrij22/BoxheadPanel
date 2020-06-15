@@ -3,27 +3,53 @@
         <div class="playercontainer">
             <h3>Search for player on name or id</h3>
             <input v-model="searchQuery">
-            <div class="playerInfo" v-for="(user, index) in items" v-bind:key="index">
-                <div class="wavecon">
-                    <font-awesome-icon icon="user" /> {{user.username}}<br>
-                </div>
-                <br>
-                <div class="dispData">
-                    <div @click="toggleData(index, value)" class="smallInfo" v-for="(value, name, i) in (Object.assign(user, user.clientdata))" v-bind:key="i">
-                        <b>{{name}}</b><br>{{value}}
-                    </div>
-                </div>
-                <div class="toggleInfo output" v-if="toggled == index">
-                    {{JSON.stringify(toggletext, null, "\t")}}
-                </div>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th v-for="(value, key) in gridColumns" v-bind:key="key">
+                            {{gridFormatted[key]}}
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <template v-for="(entry, key) in items" >
+                    <tr v-bind:key="key">
+                        <td v-for="(value, key) in gridColumns" v-bind:key="key">
+                            {{entry[value]}}
+                        </td>
+                        <td>
+                            <input type="button" value="View" @click="(toggled === key) ? toggled = -1 : toggled = key">
+                            <input type="button" value="Delete" @click="removePlayer(entry.clientid)">
+                        </td>
+                    </tr>
+                    <tr v-bind:key="key" v-if="toggled === key">
+                        <td colspan="4">
+                            <table>
+                                <tbody>
+                                <tr v-bind:key="key" v-for="(value, key) in entry" >
+                                    <td>
+                                        {{key}}
+                                    </td>
+                                    <td>
+                                        {{value}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </template>
+                </tbody>
+            </table>
         </div>
-        <p class="output">{{JSON.stringify(serverData, null, "\t")}}</p>
+        <p class="output" v-if="$store.state.debugger">{{JSON.stringify(serverData, null, "\t")}}</p>
     </div>
 </template>
 
 <script>
     import _ from 'lodash';
+    import axios from 'axios';
 
     export default {
         props: ['serverData'],
@@ -33,98 +59,135 @@
                 searchQuery: "",
                 items: [],
                 toggled: -1,
-                toggletext: ""
+                gridColumns: ["username", "clientid", "lastplayed"],
+                gridFormatted: ["Username", "Client ID", "Last Played"]
             }
         },
         methods:{
-            doSearch(){
+            removePlayer(ID){
+                //Headers
+                axios.delete(`http://${this.$store.state.serverAddress}/rest/player/${ID}`,{
+                    headers: this.$store.getters.getHeader
+                }).then((response) =>{
+
+                    console.log("test")
+                    //Set the server data
+                    this.serverData.data = response.data;
+                    _.remove(this.items,{
+                        clientid: ID
+                    });
+
+                })
+
+            },
+            doSearch: _.debounce(function(){
                 let query = this.searchQuery;
                 this.toggleData(-1, "");
-                console.log(query);
+
+                //Dont do anything on empty filter
                 if (query === ""){
                     console.log("empty");
                     this.items = _.take(this.serverData.data, 10);
                 }
+
+                //Do filter
                 this.items = _.filter(this.serverData.data, function(o) {
                     if (o.username.includes(query) || o.clientid.toString().includes(query)){
                         return true;
                     }
                 });
-            },
+
+                //Only 10 items max
+                this.items = _.take(this.items, 50);
+
+                //Mutate data
+                _.each(this.items, (item)=>{
+                    Object.assign(item, item.clientdata, {clientdata: null});
+                })
+            }, 800),
             toggleData(index, value){
                 this.toggled = index;
                 this.toggletext = value;
             }
         },
         watch: {
-            searchQuery: function(val){
-                console.log (val);
+            searchQuery(){
                 this.doSearch();
             },
             serverData: function () {
-                this.items = _.take(this.serverData.data, 10);
+                this.items = _.take(this.serverData.data, 50);
             }
         },
         mounted(){
             //Set path
             this.$emit('emitpath', "player", "");
-        }
+        },
+        filters: {
+            capitalize: function(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+        },
     }
 </script>
 
 <style scoped lang="scss">
 
     .playercontainer{
-        overflow: hidden;
-        overflow-y: scroll;
-        width: 100%;
-        height: 200%;
-    }
-
-    .wavecon{
-        top: 0;
-        border-radius: 4px;
-        position: absolute;
-        background: #4d4d4d;
-        width: 125px;
-        height: 30px;
-        color: #e9e9e9;
-    }
-
-    .playerInfo{
-        width: 100%;
-        border-radius: 8px;
-        margin: 3px;
-        position: relative;
-    }
-
-    .toggleInfo{
-        background: #f8f8f8;
-        border-radius: 4px;
-        padding: 8px;
-        margin: 10px;
         width: 100%;
     }
-    .smallInfo{
-        background: #e9e9e9;
-        border-radius: 8px;
 
-        padding: 8px;
-        margin: 6px;
-
-        flex-grow: 1;
-        max-width: 300px;
-        max-height: 120px;
-        overflow: hidden;
-        overflow-y: auto;
-        overflow-scrolling: auto;
+    body {
+        font-family: Helvetica Neue, Arial, sans-serif;
+        font-size: 14px;
+        color: #444;
     }
 
-    .dispData{
+    table {
+        border: 2px solid #b94242;
+        border-radius: 3px;
+        background-color: #fff;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    th {
+        background-color: #b94242;
+        color: rgba(255, 255, 255, 0.66);
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    td {
+        background-color: #f9f9f9;
+        text-align: left;
+    }
+
+    th,
+    td {
+        padding: 5px 10px;
+    }
+
+    //Elke 4de heeft display flex
+    td:nth-child(4n){
         display: flex;
     }
 
-    button{
-        margin: 4px;
+    //Als het een button is moet hij zich kunnen verspreiden
+    td input[type="button"]{
+        margin: 0;
+        padding: 5px 10px 5px 10px;
+        flex-grow: 1;
+        border-radius: 5px;
+    }
+
+    th.active {
+        color: #fff;
+    }
+
+    th.active .arrow {
+        opacity: 1;
     }
 </style>

@@ -11,7 +11,7 @@
                     <b v-else> Admin message</b>
                 </div>
             </div>
-            <button class="box-button">New message</button>
+            <button class="box-button" @click="sendMail = !sendMail">New message</button>
         </div>
         <div class="textboxes">
             <div class="textbox" v-if="serverData.data[messageSet]">
@@ -23,14 +23,19 @@
                 <hr>
                 {{serverData.data[messageSet].body}}
             </div>
-            <div class="textbox" v-if="serverData.data[messageSet]">
-                <b>Title</b> {{serverData.data[messageSet].title}}<br>
-                <div v-if="serverData.data[messageSet].sender">
-                    <b>Sender</b> {{serverData.data[messageSet].sender.username}}<br>
+            <hr v-if="serverData.data[messageSet] && sendMail">
+            <div class="textbox" v-if="sendMail">
+                <div style="display: flex; flex-direction: column">
+                    <div>
+                        <div style="min-width: 90px">Title</div>
+                        <input style="padding: 8px; width: -webkit-fill-available" value="new message"/>
+                    </div>
+                    <div>
+                        <div style="min-width: 90px">To </div>
+                        <input style="padding: 8px; width: -webkit-fill-available" value="new message"/>
+                    </div>
                 </div>
-                <b>Recipient</b> {{serverData.data[messageSet].recipient.username}}<br>
-                <hr>
-                {{serverData.data[messageSet].body}}
+                <textarea class="textarea"></textarea>
             </div>
         </div>
     </div>
@@ -42,7 +47,8 @@
         name: "MailComponent",
         data: function(){
             return {
-                messageSet: -1
+                messageSet: -1,
+                sendMail: false
             }
         },
         mounted() {
@@ -59,7 +65,6 @@
         display: flex;
         flex-direction: row;
     }
-
 
     .textbox{
         text-align: left;
@@ -81,6 +86,15 @@
             margin-left: 0px;
             margin-top: 8px;
         }
+    }
+
+    textarea{
+        display: inline-block;
+        border: 1px solid #ccc;
+        margin-top: 25px;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
     }
 
     .mailbox{

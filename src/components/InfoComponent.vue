@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-        <p class="output">{{JSON.stringify(serverData, null, "\t")}}</p>
+        <p class="output" v-if="$store.state.debugger">{{JSON.stringify(serverData, null, "\t")}}</p>
     </div>
 </template>
 

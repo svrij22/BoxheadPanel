@@ -1,5 +1,5 @@
 <template>
-    <div class="sidenav" v-bind:class="{ bindBottomNav: isBottom}" ref="nav">
+    <div class="sidenav" ref="nav">
             <div v-if="!isBottom">
                 <div class="logo" v-if="!isBottom">
                     <img src="../assets/logo.png" alt="Boxhead logo navbar"/>
@@ -30,8 +30,11 @@
                         {{this.$store.state.username}}
                     </div>
                     <button @click="logout" class="box-button"> Logout</button>
+                    <div class="debugbox">
+                        <input type="checkbox" id="debugtoggle" v-model="msg" @change="$store.commit('setDebugger', msg)"/>
+                        <label for="debugtoggle">Toggle Debugger</label>
+                    </div>
                 </div>
-
             </div>
     </div>
 </template>
@@ -42,7 +45,8 @@
         props: ['isBottom'],
         data: function (){
             return{
-                mq: false
+                mq: false,
+                msg: this.$store.state.debugger
             }
         },
         methods: {
@@ -71,6 +75,23 @@
         padding-top: 45px;
     }
 
+    .debugbox{
+        text-align: left;
+        padding-left: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .debugbox input{
+        height: 19px;
+        width: 19px;
+    }
+
+    .debugbox label{
+        margin: 0 0 0 10px;
+        color: #e5e5e5;
+    }
+
     .sidenav {
         min-width: 240px;
         z-index: 1;
@@ -87,10 +108,6 @@
         .sidenav {
             overflow-x: unset;
         }
-    }
-
-    .bindBottomNav {
-        margin-top: auto;
     }
 
     .sidenav a {

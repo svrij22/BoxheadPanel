@@ -38,14 +38,9 @@
                     return;
                 }
 
-                //Headers
-                const headers = {
-                    'Authorization': 'Bearer' + window.sessionStorage.getItem("JWT"),
-                };
-
                 //Do get
                 axios.get(`http://${this.$store.state.serverAddress}/rest/${this.getPath}`, {
-                    headers: headers
+                    headers: this.$store.getters.getHeader
                 })
                     .then((response) => {
                         // handle success
@@ -177,6 +172,10 @@
             overflow-y: scroll;
         }
 
+        .bottom-disp{
+            margin-top: auto;
+        }
+
         #view{
             margin: 0px!important;
             padding: 8px!important;
@@ -185,6 +184,7 @@
 
     @media only screen and (min-width: 500px) {
         .bottom-disp{
+            margin-top: auto;
             display: none!important;
         }
 
@@ -220,6 +220,7 @@
         background: #f9e6e6;
         width: 100%;
         max-height: 2000px;
+        min-height: 300px;
     }
 
     .box-button{
@@ -238,7 +239,7 @@
 
     input{
         padding: 12px 20px;
-        margin: 8px 0!important;
+        margin: 8px 0;
         display: inline-block;
         border: 1px solid #ccc;
         box-sizing: border-box;

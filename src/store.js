@@ -10,12 +10,14 @@ export default new Vuex.Store({
         username: "",
         role: "",
         version: 1,
-        serverAddress: "localhost:8000"
+        serverAddress: "localhost:8000",
+        debugger: true
     },
     mutations: {
         setLog(state, data) {state.loggedIn = data},
         setName(state, data) {state.username = data},
         setRole(state, data) {state.role = data},
+        setDebugger(state, data) {state.debugger = data},
         initialiseStore(state) {
             // Check if the store exists
             if(localStorage.getItem('store')) {
@@ -43,6 +45,13 @@ export default new Vuex.Store({
         },
         saveStore(state){
             localStorage.setItem('store', JSON.stringify(state));
+        }
+    },
+    getters: {
+        getHeader: state => {
+            return {
+                'Authorization': 'Bearer' + window.sessionStorage.getItem("JWT"),
+            }
         }
     }
 });

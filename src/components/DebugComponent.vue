@@ -10,7 +10,7 @@
             </button>
         </div>
         <hr>
-        <div class="output">
+        <div class="output" v-if="$store.state.debugger">
             {{serverData.data}}
         </div>
         <button class="box-button" @click="serverData.data = JSON.stringify(serverData.data, null, '\t')">JSON Stringify</button>

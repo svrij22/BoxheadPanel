@@ -5,7 +5,7 @@
         <div id="note">
             <b>{{servernote}}</b>
         </div>
-        <notification-component/>
+        <notification-component v-if="this.$store.state.loggedIn"/>
         <side-bar-comp class="bottom-disp" is-bottom="true"/>
     </div>
 </template>

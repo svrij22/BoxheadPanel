@@ -24,7 +24,7 @@
                         </td>
                     </tr>
                     <tr v-bind:key="key" v-if="toggled === key">
-                        <td colspan="4">
+                        <td colspan="5">
                             <table>
                                 <tbody>
                                 <tr v-bind:key="key" v-for="(value, key) in entry" >
@@ -104,7 +104,7 @@
                 _.each(this.items, (item)=>{
                     Object.assign(item, item.clientdata, {clientdata: null});
                 })
-            }, 800),
+            }, 450),
             toggleData(index, value){
                 this.toggled = index;
                 this.toggletext = value;

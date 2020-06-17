@@ -54,8 +54,8 @@
             logout() {
                 window.sessionStorage.setItem("JWT", "");
                 this.$store.commit('removeStore');
-                location.reload();
                 this.$router.push("/login")
+                location.reload();
             }
         },
         mounted() {

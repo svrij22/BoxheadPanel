@@ -6,12 +6,20 @@
         </button>
         <div class="notification-box" v-if="isActive">
             <h4><font-awesome-icon icon="envelope"/>Notifications</h4>
-            <div class="notification-item" v-for="i in notifications" v-bind:key="i">
-                <div class="header">
-                    <div class="titlebox"><font-awesome-icon icon="envelope"/><span v-bind:class="{title: true, isRead: i.read}">{{i.title}}</span></div>
-                    <i>{{i.dateStr}}</i>
+            <div id="box-view">
+                <div class="notification-item" v-for="(i) in notifications" v-bind:key="i">
+                    <div class="header">
+                        <div class="titlebox"><font-awesome-icon icon="envelope"/><span v-bind:class="{title: true, isRead: i.read}">{{i.title}}</span><font-awesome-icon style="cursor: pointer" @click="deleteMsg(i)" icon="times"/></div>
+                        <i>{{i.dateStr}}</i>
+                    </div>
+                    <p>{{i.body}}</p>
                 </div>
-                <p>{{i.body}}</p>
+            </div>
+            <div class="new-note">
+                <h5><font-awesome-icon icon="envelope"/>New</h5>
+                <input v-model="msgTitle" placeholder="New notification"/>
+                <textarea v-model="msgBody" placeholder="My notification body"/>
+                <input class="box-button" type="button" value="POST" @click="postMsg">
             </div>
         </div>
     </div>
@@ -21,6 +29,7 @@
     import axios from "axios";
     // eslint-disable-next-line no-unused-vars
     import _ from "lodash";
+    import * as querystring from "query-string";
 
     export default {
         name: "NotificationComponent",
@@ -28,7 +37,9 @@
             return{
                 notifications: [],
                 isActive: false,
-                unreadAmount: 0
+                unreadAmount: 0,
+                msgTitle: "",
+                msgBody: ""
             }
         },
         methods: {
@@ -37,10 +48,6 @@
                     headers: this.$store.getters.getHeader
                 }).then((response) =>{
                     this.notifications = response.data;
-                    this.unreadAmount = 0;
-                    this.notifications.forEach((item) =>{
-                        this.unreadAmount += !item.read;
-                    })
                     this.sortItems();
                 })
             }, 10000),
@@ -52,12 +59,35 @@
                     this.sortItems();
                 })
             },
+            deleteMsg: function (notification){
+                axios.delete(`http://${this.$store.state.serverAddress}/rest/notification/${JSON.stringify(notification)}`,{
+                    headers: this.$store.getters.getHeader
+                }).then((response) =>{
+                    this.notifications = response.data;
+                    this.sortItems();
+                })
+            },
+            postMsg(){
+                axios.post(`http://${this.$store.state.serverAddress}/rest/notification/`, querystring.stringify({
+                        title: this.msgTitle,
+                        body: this.msgBody
+                    }), {
+                    headers: this.$store.getters.getHeader
+                }).then((response) =>{
+                    this.notifications = response.data;
+                    this.sortItems();
+                })
+            },
             doSwitch(){
                 this.isActive = !this.isActive
                 if (!this.isActive) this.sendRead();
             },
             sortItems(){
-                this.notifications = _.orderBy(this.notifications, 'date.nano', 'desc')
+                this.unreadAmount = 0;
+                this.notifications.forEach((item) =>{
+                    this.unreadAmount += !item.read;
+                })
+                this.notifications = _.orderBy(this.notifications, 'dateNum', 'desc')
             }
         },
         mounted() {
@@ -67,6 +97,24 @@
 </script>
 
 <style scoped>
+
+    .new-note{
+        margin-top: auto;
+    }
+
+    .new-note textarea{
+        height: 120px;
+        resize: none;
+        margin: auto;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .new-note input{
+        width: 100%;
+        margin: 0;
+
+    }
 
     .notif-btn{
         position: absolute;
@@ -99,7 +147,11 @@
         padding-bottom: 16px;
         display: flex;
         flex-direction: column;
-        min-height: 100%;
+        height: 100%;
+    }
+
+    #box-view{
+        overflow-y: scroll;
     }
 
     .notification-box svg{

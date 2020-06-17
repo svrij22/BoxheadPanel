@@ -5,6 +5,7 @@
         <div id="note">
             <b>{{servernote}}</b>
         </div>
+        <notification-component/>
         <side-bar-comp class="bottom-disp" is-bottom="true"/>
     </div>
 </template>
@@ -12,10 +13,12 @@
 <script>
     import SideBarComp from "@/components/SideBarComp";
     import axios from "axios";
+    import NotificationComponent from "./components/NotificationComponent";
 
     export default {
         name: 'App',
         components: {
+            NotificationComponent,
             SideBarComp
         },
         data: function () {

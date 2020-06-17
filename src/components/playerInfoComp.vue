@@ -20,7 +20,7 @@
                         </td>
                         <td>
                             <input type="button" value="View" @click="(toggled === key) ? toggled = -1 : toggled = key">
-                            <input type="button" value="Delete" @click="removePlayer(entry.clientid)">
+                            <input type="button" value="Delete" @click="removePlayer(entry.clientid)" v-if="entry.hasAccount">
                         </td>
                     </tr>
                     <tr v-bind:key="key" v-if="toggled === key">
@@ -59,8 +59,8 @@
                 searchQuery: "",
                 items: [],
                 toggled: -1,
-                gridColumns: ["username", "clientid", "lastplayed"],
-                gridFormatted: ["Username", "Client ID", "Last Played"]
+                gridColumns: ["username", "clientid", "lastplayed", "hasAccount"],
+                gridFormatted: ["Username", "Client ID", "Last Played", "Registered"]
             }
         },
         methods:{
@@ -168,11 +168,6 @@
     th,
     td {
         padding: 5px 10px;
-    }
-
-    //Elke 4de heeft display flex
-    td:nth-child(4n){
-        display: flex;
     }
 
     //Als het een button is moet hij zich kunnen verspreiden

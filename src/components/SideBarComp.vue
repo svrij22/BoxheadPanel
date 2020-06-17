@@ -16,7 +16,8 @@
                         <router-link to="/user">User info</router-link>
                         <router-link to="/debug">Debugger</router-link>
                         <router-link to="/ssh">SSH CLI</router-link>
-                        <router-link to="/mail">Mail</router-link>
+                        <router-link to="/performance">Performance Log</router-link>
+<!--                    <router-link to="/mail">Mail</router-link>-->
                     </div>
                     <div v-else>
                         <router-link to="/login">Login</router-link>

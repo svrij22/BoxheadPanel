@@ -53,7 +53,7 @@
         },
         mounted() {
             //Set path
-            this.$emit('emitpath', "game/messages", "")
+            this.$emit('emitpath', "notification", "")
         }
     }
 </script>

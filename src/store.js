@@ -10,7 +10,9 @@ export default new Vuex.Store({
         username: "",
         role: "",
         version: 1,
-        serverAddress: "localhost:8000",
+        serverAddress: "http://localhost:8000",
+        // serverAddress: "https://boxhead.herokuapp.com",
+
         debugger: true
     },
     mutations: {

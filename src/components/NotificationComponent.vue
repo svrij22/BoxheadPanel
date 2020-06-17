@@ -44,7 +44,7 @@
         },
         methods: {
             refreshMessages: _.throttle(function(){
-                axios.get(`http://${this.$store.state.serverAddress}/rest/notification/`,{
+                axios.get(`${this.$store.state.serverAddress}/rest/notification/`,{
                     headers: this.$store.getters.getHeader
                 }).then((response) =>{
                     this.notifications = response.data;
@@ -52,7 +52,7 @@
                 })
             }, 10000),
             sendRead: function(){
-                axios.put(`http://${this.$store.state.serverAddress}/rest/notification/`,{
+                axios.put(`${this.$store.state.serverAddress}/rest/notification/`,{
                     headers: this.$store.getters.getHeader
                 }).then((response) =>{
                     this.notifications = response.data;
@@ -60,7 +60,7 @@
                 })
             },
             deleteMsg: function (notification){
-                axios.delete(`http://${this.$store.state.serverAddress}/rest/notification/${JSON.stringify(notification)}`,{
+                axios.delete(`${this.$store.state.serverAddress}/rest/notification/${JSON.stringify(notification)}`,{
                     headers: this.$store.getters.getHeader
                 }).then((response) =>{
                     this.notifications = response.data;
@@ -68,7 +68,7 @@
                 })
             },
             postMsg(){
-                axios.post(`http://${this.$store.state.serverAddress}/rest/notification/`, querystring.stringify({
+                axios.post(`${this.$store.state.serverAddress}/rest/notification/`, querystring.stringify({
                         title: this.msgTitle,
                         body: this.msgBody
                     }), {

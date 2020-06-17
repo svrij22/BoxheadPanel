@@ -49,7 +49,7 @@
                 console.log("Register attempt");
                 this.servernote = "";
 
-                axios.post(`http://${this.$store.state.serverAddress}/authentication/register`, querystring.stringify({
+                axios.post(`${this.$store.state.serverAddress}/authentication/register`, querystring.stringify({
                     username: this.username,
                     password: this.password,
                     regkey: this.regkey

@@ -66,7 +66,7 @@
         methods:{
             removePlayer(ID){
                 //Headers
-                axios.delete(`http://${this.$store.state.serverAddress}/rest/player/${ID}`,{
+                axios.delete(`${this.$store.state.serverAddress}/rest/player/${ID}`,{
                     headers: this.$store.getters.getHeader
                 }).then((response) =>{
 

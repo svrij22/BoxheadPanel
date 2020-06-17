@@ -42,7 +42,7 @@
                 }
 
                 //Do get
-                axios.get(`http://${this.$store.state.serverAddress}/rest/${this.getPath}`, {
+                axios.get(`${this.$store.state.serverAddress}/rest/${this.getPath}`, {
                     headers: this.$store.getters.getHeader
                 })
                     .then((response) => {

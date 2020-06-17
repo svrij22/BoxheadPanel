@@ -44,7 +44,7 @@
                 console.log("Login attempt");
                 this.servernote = "";
 
-                axios.post(`http://${this.$store.state.serverAddress}/authentication/`, querystring.stringify({
+                axios.post(`${this.$store.state.serverAddress}/authentication/`, querystring.stringify({
                     username: this.username,
                     password: this.password
                 }))
